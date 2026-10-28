@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procfac.local/esquema-salida.schema.json",
+  "title": "Factura A - Esquema de salida (PRD-001)",
+  "description": "JSON de una factura A, tal como lo devuelve la extracción (RF-25) y como se descarga (RF-07). Lo corregido por el usuario solo se restringe por tipo en los campos numéricos (RF-30), por lo que un JSON descargado puede no cumplir los patrones de texto.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "punto_venta", "numero_comprobante",
+    "cuit_emisor", "razon_social_emisor", "domicilio_emisor", "localidad_emisor", "condicion_iva_emisor",
+    "cuit_receptor", "razon_social_receptor", "domicilio_receptor", "localidad_receptor", "condicion_iva_receptor",
+    "fecha_comprobante", "condicion_venta", "subtotal", "impuestos", "total", "items"
+  ],
+  "properties": {
+    "punto_venta": { "type": ["integer", "null"], "minimum": 0 },
+    "numero_comprobante": { "type": ["integer", "null"], "minimum": 0 },
+    "cuit_emisor": { "type": ["string", "null"], "pattern": "^[0-9]{11}$" },
+    "razon_social_emisor": { "type": ["string", "null"] },
+    "domicilio_emisor": { "type": ["string", "null"] },
+    "localidad_emisor": { "type": ["string", "null"] },
+    "condicion_iva_emisor": { "type": ["string", "null"] },
+    "cuit_receptor": { "type": ["string", "null"], "pattern": "^[0-9]{11}$" },
+    "razon_social_receptor": { "type": ["string", "null"] },
+    "domicilio_receptor": { "type": ["string", "null"] },
+    "localidad_receptor": { "type": ["string", "null"] },
+    "condicion_iva_receptor": { "type": ["string", "null"] },
+    "fecha_comprobante": { "type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+    "condicion_venta": { "type": ["string", "null"] },
+    "subtotal": { "$ref": "#/$defs/importe" },
+    "impuestos": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["descripcion_impuesto", "importe"],
+        "properties": {
+          "descripcion_impuesto": { "type": ["string", "null"] },
+          "importe": { "$ref": "#/$defs/importe" }
+        }
+      }
+    },
+    "total": { "$ref": "#/$defs/importe" },
+    "items": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["codigo", "descripcion", "cantidad", "precio_unitario", "subtotal_item"],
+        "properties": {
+          "codigo": { "type": ["string", "null"] },
+          "descripcion": { "type": ["string", "null"] },
+          "cantidad": { "type": ["number", "null"] },
+          "precio_unitario": { "$ref": "#/$defs/importe" },
+          "subtotal_item": { "$ref": "#/$defs/importe" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "importe": {
+      "description": "Decimal redondeado a 2 decimales, con punto como separador decimal. No se usa multipleOf: con números de punto flotante da falsos negativos en los validadores.",
+      "type": ["number", "null"]
+    }
+  }
+}
