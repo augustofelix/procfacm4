@@ -51,6 +51,9 @@ uv run pytest -m referencia         # aceptación con la API real y tests/data/
 | 9 | Subir el PDF de AC-14, AC-18 (cada caso) y AC-33 | Mensaje del motivo; vuelve a la carga | AC-14, AC-18, AC-33 |
 | 10 | Subir el PDF de AC-36 | No se rechaza; los ítems son los de una sola copia | AC-36 |
 | 11 | Abrir dos pestañas con el mismo usuario y procesar un PDF distinto en cada una | Cada pestaña ve solo su PDF | AC-38 |
+| 12 | Después de descargar, subir otro PDF desde la pantalla de descarga | Muestra el consentimiento del PDF nuevo, sin datos del anterior | AC-39 |
+| 13 | En la validación, escribir un CUIT de 10 dígitos y la fecha "2026-02-30", confirmar y descargar | Se descarga sin error y el `.json` tiene esos valores tal cual | AC-09 |
+| 14 | Subir el PDF de AC-11 | Campos y celdas de ítems en `null` marcados como "No obtenido" | AC-11 |
 
 ## Comprobaciones por API
 

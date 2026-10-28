@@ -21,7 +21,8 @@ pestaña; nada se escribe en disco. Decisiones en [research.md](research.md).
 **Primary Dependencies**: FastAPI + uvicorn (API), Streamlit (UI), pdfplumber (texto del
 PDF), Pydantic v2 (esquema), `anthropic` 1.x (`AsyncAnthropic`, `messages.parse`),
 python-multipart (parser en memoria), python-dotenv (`.env`), httpx (cliente de la UI);
-desarrollo: pytest, pytest-asyncio, fpdf2 (PDF de prueba generados en memoria).
+desarrollo: pytest, pytest-asyncio, fpdf2 (PDF de prueba generados en memoria), jsonschema
+(validación contra `esquema-salida.schema.json`).
 
 **Storage**: N/A. Todo en memoria (RNF-07): tokens en un dict de la API; procesos en
 `st.session_state`.
@@ -126,6 +127,7 @@ tests/
 ├── conftest.py          # generadores de PDF con fpdf2, doble del módulo de IA, cliente ASGI
 ├── unit/                # clasificación, esquema, procesamiento, auth, multipart, logs, aislamiento de IA
 ├── integration/         # API de punta a punta con IA simulada; rechazos; AC-22; AC-30
+├── ui/                  # Streamlit AppTest con cliente_api simulado
 ├── aceptacion/          # marcador referencia: Conjunto de referencia y API real (RNF-02, RNF-03, RNF-04)
 └── data/                # ignorada por git; datos reales copiados a mano
 ```

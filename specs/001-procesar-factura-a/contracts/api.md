@@ -70,6 +70,14 @@ de mostrar el consentimiento (AC-06, AC-14, AC-18, AC-33).
 - Sin reintentos: la API de Claude se llama una sola vez por petición, con un tiempo de
   espera de 60 s.
 
+## Orden de las verificaciones
+
+Si una petición falla en más de una cosa, se responde el primer error de este orden:
+1. `no_autorizado` (401), sin leer el cuerpo.
+2. `cantidad_de_archivos` (422).
+3. `sin_consentimiento` (422), solo en `/facturas/extraer`.
+4. `no_es_pdf` y el resto de la clasificación, en el orden de research.md §R3.
+
 ## Garantías transversales
 
 - Ninguna respuesta contiene datos de otra petición: la API no guarda el PDF ni el
