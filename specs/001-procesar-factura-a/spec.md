@@ -267,7 +267,8 @@ inválidas.
 - **FR-016**: El sistema DEBE mostrar al usuario todos los campos del Esquema de salida con
   los valores extraídos (RF-12, AC-08).
 - **FR-017**: El sistema DEBE indicar cuáles campos no pudo obtener (los que quedaron en
-  `null`); un campo de lista vacía no se indica como no obtenido (RF-15, AC-11).
+  `null`), incluidos los campos de cada ítem e impuesto; un campo de lista vacía no se
+  indica como no obtenido (RF-15, AC-11).
 - **FR-018**: Cuando la extracción deja en `null` todos los campos (salvo `items` e
   `impuestos`, que pueden quedar en `null` o vacíos), el sistema DEBE mostrar un mensaje que
   aclare que no se pudo leer el comprobante, junto con los campos vacíos para completar

@@ -65,7 +65,7 @@ validadores. `procfac.ia` lo convierte en `Factura`; si la conversión falla, la
 | Campo | Tipo | Regla |
 |---|---|---|
 | `factura` | `Factura` | tal como salió de la extracción, antes de editar (AC-01) |
-| `campos_no_obtenidos` | `list[str]` | nombres de los campos de primer nivel que valen `null`; un campo de lista vacía (`[]`) **no** se incluye (RF-15, AC-11) |
+| `campos_no_obtenidos` | `list[str]` | rutas de los campos que valen `null`: de primer nivel (`"total"`, `"items"`) y dentro de las listas (`"items[0].precio_unitario"`, `"impuestos[1].importe"`); un campo de lista vacía (`[]`) **no** se incluye (RF-15, AC-11) |
 | `comprobante_ilegible` | `bool` | `true` si todos los campos son `null`, sin contar `items` e `impuestos`, que pueden ser `null` o `[]` (RF-17, AC-13) |
 
 `campos_no_obtenidos` y `comprobante_ilegible` se calculan en `procfac.procesamiento`, no en
