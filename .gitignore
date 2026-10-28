@@ -1,0 +1,34 @@
+# Secretos: usuarios, contraseñas y API key de Claude (AGENTS.md)
+.env
+.env.*
+
+# Facturas reales, PDF armados para las pruebas y JSON esperados (AGENTS.md)
+tests/data/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Entorno virtual de uv
+.venv/
+
+# Tests y herramientas
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+.mypy_cache/
+
+# Streamlit (configuración local, puede contener secretos)
+.streamlit/secrets.toml
+
+# Configuración local de Claude Code
+.claude/settings.local.json
+
+# Editores y sistema operativo
+.vscode/
+.idea/
+.DS_Store
