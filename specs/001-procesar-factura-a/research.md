@@ -141,8 +141,9 @@ cada página (desarrolladas con tests primero, principio V).
 
 ## R8. JSON de descarga (RF-07, RF-30, RF-32)
 
-- **Decision**: la UI arma el JSON con `procfac.esquema.serializar_json(factura)`. Importes
-  como números JSON (el `Decimal` cuantizado se convierte a `float` solo al serializar),
+- **Decision**: la UI arma el JSON con `procfac.esquema.serializar_json(factura)` sobre la
+  `FacturaEditada` (solo tipos, sin normalizar lo que ingresó el usuario; FR-019). Importes
+  como números JSON (el `Decimal` se convierte a `float` solo al serializar),
   UTF-8 con `ensure_ascii=False` e indentación de 2 espacios. Nombre del archivo:
   `factura_<punto_venta>_<numero_comprobante>.json`, o `factura.json` si falta alguno
   (CHK034). Volver a descargar entrega los mismos bytes (RF-32).

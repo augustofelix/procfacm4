@@ -71,6 +71,15 @@ validadores. `procfac.ia` lo convierte en `Factura`; si la conversión falla, la
 `campos_no_obtenidos` y `comprobante_ilegible` se calculan en `procfac.procesamiento`, no en
 el módulo de IA.
 
+## FacturaEditada (lo que confirma el usuario, `src/procfac/esquema.py`)
+
+Mismos campos y orden que `Factura`, con `ImpuestoEditado` e `ItemEditado`, `extra="forbid"`
+y **solo restricción de tipo** (RF-30, AC-37): `int | None` en `punto_venta` y
+`numero_comprobante`, `Decimal | None` en importes y `cantidad`, `str | None` en los textos.
+Sin validadores: no se normaliza el CUIT, no se valida la fecha, no se redondea ni se exige
+`≥ 0` (FR-019, principio VII). Se crea desde la extracción con
+`FacturaEditada.model_validate(factura.model_dump())`. Es lo que se serializa y descarga.
+
 ## Documento PDF (`src/procfac/pdf/lector.py`)
 
 | Campo | Tipo | Regla |
@@ -98,7 +107,7 @@ Se construye desde `bytes` con `io.BytesIO`; nunca desde una ruta.
 - **Sesión de API**: `token: str → usuario: str` en un dict en memoria; sin vencimiento.
   Varios tokens por usuario (RF-31).
 - **Sesión de UI**: `st.session_state` de cada pestaña; guarda `token`, `estado`, el PDF
-  (`bytes`), `resultado` y la `factura` editada.
+  (`bytes`), `resultado` y la `FacturaEditada`.
 
 ## Estados del proceso en la UI (RF-11, RF-14, RF-21, RF-23, RF-27, RF-32)
 
