@@ -49,12 +49,16 @@ cada página (desarrolladas con tests primero, principio V).
   3. **Páginas** (RF-28): más de 3 → `mas_de_3_paginas`.
   4. **Texto extraíble**: alguna página con menos de 20 caracteres no blancos de texto →
      `no_es_factura_a` (PDF escaneado, aunque sea solo una página; CHK014).
-  5. **Tipo factura A** (RF-24): cada página debe tener **código de comprobante 01**
-     (regex sobre "COD." / "Cód." / "Código" seguido de `0*1` como número completo, que
-     AFIP exige impreso junto a la letra) **y** no contener marcadores excluyentes:
-     "FCE", "MiPyME" o "Crédito Electrónica" (FCE MiPyME A, código 201), "NOTA DE CRÉDITO",
-     "NOTA DE DÉBITO", "RECIBO", "REMITO", "LIQUIDACIÓN". La factura M tiene código 51, la
-     B 06, la C 11 y la E 19, así que quedan fuera por código (CHK010, CHK011).
+  5. **Tipo factura A** (RF-24): se decide **solo por el código de comprobante**: "COD." /
+     "Cód." / "Código" seguido de `0*1` como número completo, que AFIP exige impreso junto
+     a la letra. Cualquier otro código (02 y 03 notas A, 04 recibo A, 51 M, 06 B, 11 C,
+     19 E, 201 FCE MiPyME A, 91 remito, liquidaciones, etc.) o la falta de código →
+     `no_es_factura_a` (CHK010, CHK011). No se buscan palabras como "REMITO" o "RECIBO" en
+     el texto: las facturas A suelen imprimir "Remito N°" o "Recibí conforme" como datos
+     propios, y esas palabras las rechazarían por error.
+     El código se exige en la **primera página de cada copia** (la que tiene el
+     identificador del paso 6). Una página sin identificador ni código es continuación de
+     la anterior; una página con un código distinto de 01 → `no_es_factura_a`.
   6. **Una sola factura** (RF-18): en cada página se busca el identificador
      (punto de venta, número) con los patrones del formato AFIP ("Punto de Venta: 00001
      Comp. Nro: 00000123" y "N° 0001-00000123"), normalizado sin ceros a la izquierda. Si
