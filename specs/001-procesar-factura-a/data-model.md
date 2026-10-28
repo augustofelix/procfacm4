@@ -129,5 +129,6 @@ login ──ok──▶ carga ──PDF admitido──▶ consentimiento ──a
   no está disponible (AC-26).
 - "Confirmar" pasa a `descargable`: los campos quedan **de solo lectura** y la descarga se
   habilita. Cada descarga entrega el mismo JSON (RF-32, CHK028, CHK029).
-- Subir un PDF nuevo desde `validacion` o `descargable` equivale a volver a `carga` y
-  descarta el proceso anterior sin pedir confirmación (CHK035).
+- Subir un PDF nuevo desde `descargable` equivale a volver a `carga` y verificar ese PDF;
+  descarta el proceso anterior sin pedir confirmación (RF-32, CHK035). En `validacion` no
+  hay selector de archivos, para no descartar las correcciones en curso.
