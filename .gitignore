@@ -1,6 +1,7 @@
 # Secretos: usuarios, contraseñas y API key de Claude (AGENTS.md)
 .env
 .env.*
+!.env.example
 
 # Facturas reales, PDF armados para las pruebas y JSON esperados (AGENTS.md)
 tests/data/
