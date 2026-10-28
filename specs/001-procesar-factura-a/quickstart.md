@@ -42,7 +42,7 @@ uv run pytest -m referencia         # aceptación con la API real y tests/data/
 |---|---|---|---|
 | 1 | Ingresar con un usuario del `.env` | Pantalla de carga | AC-24 |
 | 2 | Ingresar con una clave incorrecta | "Usuario o contraseña incorrectos."; sigue en el login | AC-25 |
-| 3 | Subir una factura A del Conjunto de referencia | Advertencia de consentimiento; ninguna llamada a Claude (log sin `extraccion`) | AC-06 |
+| 3 | Subir una factura A del Conjunto de referencia | Advertencia de consentimiento; ninguna llamada a Claude (log sin `operacion=extraer`) | AC-06 |
 | 4 | Rechazar el consentimiento | Vuelve a la carga sin JSON | AC-07 |
 | 5 | Repetir 3, aceptar | Campos extraídos en menos de 30 s; descarga deshabilitada | AC-08, AC-26, AC-27 |
 | 6 | Corregir un campo, agregar y quitar un ítem, confirmar y descargar | El `.json` tiene los valores en pantalla | AC-09, AC-23 |
@@ -73,7 +73,8 @@ curl -s -H "Authorization: Bearer $TOKEN" -F archivo=@notas.txt \
 
 ## Comprobación de logs y disco
 
-- Después del escenario 6, buscar en la salida de la API los valores del JSON descargado:
-  no debe aparecer ninguno (AC-40).
+- Después del escenario 6, buscar en la salida de la API y en la de la UI (las dos de
+  `make dev`) los valores del JSON descargado: no debe aparecer ninguno (AC-40). La UI debe
+  haber dejado las líneas `operacion=consentimiento` y `operacion=descarga`.
 - El test `tests/integration/test_sin_archivos.py` cubre AC-22; a mano, comparar
   `ls -la /tmp` antes y después del flujo.
