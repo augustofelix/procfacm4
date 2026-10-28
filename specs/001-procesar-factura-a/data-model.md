@@ -107,7 +107,8 @@ Se construye desde `bytes` con `io.BytesIO`; nunca desde una ruta.
 - **Sesión de API**: `token: str → usuario: str` en un dict en memoria; sin vencimiento.
   Varios tokens por usuario (RF-31).
 - **Sesión de UI**: `st.session_state` de cada pestaña; guarda `token`, `estado`, el PDF
-  (`bytes`), `resultado` y la `FacturaEditada`.
+  (`bytes`), `resultado`, la `FacturaEditada`, `usuario` (el nombre, para el log) e
+  `inicio_proceso` (para calcular la duración que se registra).
 
 ## Estados del proceso en la UI (RF-11, RF-14, RF-21, RF-23, RF-27, RF-32)
 

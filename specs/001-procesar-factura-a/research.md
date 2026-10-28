@@ -133,9 +133,13 @@ cada página (desarrolladas con tests primero, principio V).
 ## R7. Logs (RF-33)
 
 - **Decision**: módulo `logging` hacia stdout, formato clave=valor, con un único punto de
-  registro (`registrar_proceso(usuario, resultado, motivo, duracion_ms)`). Nunca se pasa a
-  los logs el texto, los campos ni los bytes. El access log de uvicorn queda activo (solo
-  método, ruta y código).
+  registro (`registrar_proceso(usuario, operacion, resultado, motivo, duracion_ms)`). Nunca
+  se pasa a los logs el texto, los campos ni los bytes. El access log de uvicorn queda
+  activo (solo método, ruta y código).
+- La API registra `verificar` y `extraer` (admitido, rechazo y motivo, falla_ia, extraido).
+  La UI registra lo que la API no ve: `consentimiento` (aceptado/rechazado), `validacion`
+  (cancelada) y `descarga` (descargado, con `on_click` del `download_button`). Las dos usan
+  `procfac.logs`; ninguna pasa contenido (FR-025).
 - **Rationale**: stdout no escribe archivos (RNF-07); un único punto de registro facilita
   el test de AC-40.
 
