@@ -10,57 +10,57 @@
 
 ## Seguridad y privacidad
 
-- [ ] CHK001 - ¿Está especificado el contenido mínimo de la advertencia de consentimiento (qué datos se envían, a qué servicio y qué pasa si se rechaza)? [Clarity, Spec §FR-010]
-- [ ] CHK002 - ¿Define el spec qué se envía exactamente al servicio de IA (texto extraído o el PDF completo), de modo que la advertencia describa con precisión lo que se comparte? [Gap, Assumption]
-- [ ] CHK003 - ¿Está definido que el consentimiento vale para un solo PDF y que debe pedirse de nuevo en cada proceso? [Clarity, Spec §FR-010, §FR-011]
-- [ ] CHK004 - ¿Exige el spec sesión iniciada para todas las operaciones del proceso (consentimiento, validación, descarga) y no solo para la "petición de procesamiento"? [Coverage, Spec §FR-002]
-- [ ] CHK005 - ¿Está especificado el mensaje ante credenciales inválidas, incluido si debe evitar revelar cuál de los dos datos (usuario o contraseña) es incorrecto? [Gap, Spec §FR-001]
-- [ ] CHK006 - ¿Se excluye de forma explícita, o se define, un límite de intentos fallidos de inicio de sesión? [Gap, Spec §FR-001]
-- [ ] CHK007 - ¿Define el spec cuánto tiempo permanecen en memoria los datos de un proceso abandonado (cierre del navegador), dado que la sesión no cierra ni vence? [Gap, Spec §FR-024, Assumptions]
-- [ ] CHK008 - ¿Son consistentes FR-025 (registros con el nombre de usuario) y FR-024/RNF-07, que prohíben escribir en el servidor el contenido del PDF o del JSON? ¿Queda claro que los metadatos sí pueden persistirse? [Consistency, Spec §FR-024, §FR-025]
-- [ ] CHK009 - ¿Son consistentes FR-003 (aislamiento por sesión) y la redacción de AC-04 y AC-30 en el PRD, que hablan de aislamiento entre usuarios? [Consistency, Spec §FR-003, §FR-003a]
+- [x] CHK001 - ¿Está especificado el contenido mínimo de la advertencia de consentimiento (qué datos se envían, a qué servicio y qué pasa si se rechaza)? [Clarity, Spec §FR-010]
+- [x] CHK002 - ¿Define el spec qué se envía exactamente al servicio de IA (texto extraído o el PDF completo), de modo que la advertencia describa con precisión lo que se comparte? [Gap, Assumption]
+- [x] CHK003 - ¿Está definido que el consentimiento vale para un solo PDF y que debe pedirse de nuevo en cada proceso? [Clarity, Spec §FR-010, §FR-011]
+- [x] CHK004 - ¿Exige el spec sesión iniciada para todas las operaciones del proceso (consentimiento, validación, descarga) y no solo para la "petición de procesamiento"? [Coverage, Spec §FR-002]
+- [x] CHK005 - ¿Está especificado el mensaje ante credenciales inválidas, incluido si debe evitar revelar cuál de los dos datos (usuario o contraseña) es incorrecto? [Gap, Spec §FR-001]
+- [x] CHK006 - ¿Se excluye de forma explícita, o se define, un límite de intentos fallidos de inicio de sesión? [Gap, Spec §FR-001]
+- [x] CHK007 - ¿Define el spec cuánto tiempo permanecen en memoria los datos de un proceso abandonado (cierre del navegador), dado que la sesión no cierra ni vence? [Gap, Spec §FR-024, Assumptions]
+- [x] CHK008 - ¿Son consistentes FR-025 (registros con el nombre de usuario) y FR-024/RNF-07, que prohíben escribir en el servidor el contenido del PDF o del JSON? ¿Queda claro que los metadatos sí pueden persistirse? [Consistency, Spec §FR-024, §FR-025]
+- [x] CHK009 - ¿Son consistentes FR-003 (aislamiento por sesión) y la redacción de AC-04 y AC-30 en el PRD, que hablan de aislamiento entre usuarios? [Consistency, Spec §FR-003, §FR-003a]
 
 ## Clasificación y rechazo previo
 
-- [ ] CHK010 - ¿Están definidos los indicadores del documento que permiten identificarlo como factura A (letra, código de comprobante, leyendas)? [Clarity, Spec §FR-007]
-- [ ] CHK011 - ¿Están especificados los criterios que distinguen una factura A de una factura M y de una FCE MiPyME A, que comparten rasgos visuales? [Clarity, Spec §FR-007, AC-18]
-- [ ] CHK012 - ¿Está definido qué hace que dos páginas sean copias de una misma factura y no dos facturas distintas (por ejemplo, mismo punto de venta y número)? [Clarity, Spec §FR-008]
-- [ ] CHK013 - ¿Define el spec qué motivo de rechazo se informa cuando aplica más de uno (por ejemplo, 4 páginas y además no es factura A)? [Gap, Spec §FR-009]
-- [ ] CHK014 - ¿Está definido "PDF escaneado" para casos mixtos, como páginas con texto y páginas solo de imagen? [Ambiguity, Spec §FR-007]
-- [ ] CHK015 - ¿Se especifica si "archivo que no es PDF" se determina por la extensión, por el contenido o por ambos? [Ambiguity, Spec §FR-005]
-- [ ] CHK016 - ¿Está cubierto el caso de un archivo `.pdf` dañado o ilegible, con un motivo de rechazo y un mensaje? [Edge Case, Gap]
-- [ ] CHK017 - ¿Están definidos el texto o el contenido mínimo de cada mensaje de rechazo, de modo que sean verificables de forma objetiva? [Measurability, Spec §FR-009]
+- [x] CHK010 - ¿Están definidos los indicadores del documento que permiten identificarlo como factura A (letra, código de comprobante, leyendas)? [Clarity, Spec §FR-007]
+- [x] CHK011 - ¿Están especificados los criterios que distinguen una factura A de una factura M y de una FCE MiPyME A, que comparten rasgos visuales? [Clarity, Spec §FR-007, AC-18]
+- [x] CHK012 - ¿Está definido qué hace que dos páginas sean copias de una misma factura y no dos facturas distintas (por ejemplo, mismo punto de venta y número)? [Clarity, Spec §FR-008]
+- [x] CHK013 - ¿Define el spec qué motivo de rechazo se informa cuando aplica más de uno (por ejemplo, 4 páginas y además no es factura A)? [Gap, Spec §FR-009]
+- [x] CHK014 - ¿Está definido "PDF escaneado" para casos mixtos, como páginas con texto y páginas solo de imagen? [Ambiguity, Spec §FR-007]
+- [x] CHK015 - ¿Se especifica si "archivo que no es PDF" se determina por la extensión, por el contenido o por ambos? [Ambiguity, Spec §FR-005]
+- [x] CHK016 - ¿Está cubierto el caso de un archivo `.pdf` dañado o ilegible, con un motivo de rechazo y un mensaje? [Edge Case, Gap]
+- [x] CHK017 - ¿Están definidos el texto o el contenido mínimo de cada mensaje de rechazo, de modo que sean verificables de forma objetiva? [Measurability, Spec §FR-009]
 
 ## Extracción y Esquema de salida
 
-- [ ] CHK018 - ¿Exige el spec que el encabezado y los totales también provengan de una sola copia en un PDF con ORIGINAL, DUPLICADO y TRIPLICADO, y no solo los ítems? [Coverage, Spec §FR-008, AC-36]
-- [ ] CHK019 - ¿Es consistente la distinción entre `null` y lista vacía en FR-013, FR-017, FR-018 y Key Entities? [Consistency]
-- [ ] CHK020 - ¿Está especificada la regla de redondeo a 2 decimales (por ejemplo, mitad hacia arriba)? [Clarity, Spec §Key Entities]
-- [ ] CHK021 - ¿Está definido qué hacer cuando el valor extraído no respeta el formato del esquema (un CUIT que no tiene 11 dígitos, una fecha inválida): se considera falla del servicio o se muestra el valor? [Edge Case, Spec §FR-015]
-- [ ] CHK022 - ¿Está definido el momento en que empiezan a contar los 60 segundos de espera del servicio de IA? [Clarity, Spec §FR-015]
-- [ ] CHK023 - ¿Aclara el spec si una respuesta que cumple el esquema en parte (algunos campos válidos) cuenta como falla? [Clarity, Spec §FR-015]
-- [ ] CHK024 - ¿Define el spec qué conceptos van en `impuestos` (IVA por alícuota, percepciones, impuestos internos, otros tributos)? [Clarity, Spec §FR-012]
-- [ ] CHK025 - ¿Se trata, o se excluye de forma explícita, el caso de facturas A emitidas en moneda extranjera (moneda y tipo de cambio)? [Gap]
-- [ ] CHK026 - ¿Está definida la forma de cálculo del percentil 95 sobre 20 muestras, para que SC-001 sea verificable sin ambigüedad? [Measurability, Spec §SC-001]
-- [ ] CHK027 - ¿Define el spec cómo se cuenta la precisión cuando el valor esperado es `null` (si un `null` obtenido coincide)? [Measurability, Spec §SC-003, §SC-004]
+- [x] CHK018 - ¿Exige el spec que el encabezado y los totales también provengan de una sola copia en un PDF con ORIGINAL, DUPLICADO y TRIPLICADO, y no solo los ítems? [Coverage, Spec §FR-008, AC-36]
+- [x] CHK019 - ¿Es consistente la distinción entre `null` y lista vacía en FR-013, FR-017, FR-018 y Key Entities? [Consistency]
+- [x] CHK020 - ¿Está especificada la regla de redondeo a 2 decimales (por ejemplo, mitad hacia arriba)? [Clarity, Spec §Key Entities]
+- [x] CHK021 - ¿Está definido qué hacer cuando el valor extraído no respeta el formato del esquema (un CUIT que no tiene 11 dígitos, una fecha inválida): se considera falla del servicio o se muestra el valor? [Edge Case, Spec §FR-015]
+- [x] CHK022 - ¿Está definido el momento en que empiezan a contar los 60 segundos de espera del servicio de IA? [Clarity, Spec §FR-015]
+- [x] CHK023 - ¿Aclara el spec si una respuesta que cumple el esquema en parte (algunos campos válidos) cuenta como falla? [Clarity, Spec §FR-015]
+- [x] CHK024 - ¿Define el spec qué conceptos van en `impuestos` (IVA por alícuota, percepciones, impuestos internos, otros tributos)? [Clarity, Spec §FR-012]
+- [x] CHK025 - ¿Se trata, o se excluye de forma explícita, el caso de facturas A emitidas en moneda extranjera (moneda y tipo de cambio)? [Gap]
+- [x] CHK026 - ¿Está definida la forma de cálculo del percentil 95 sobre 20 muestras, para que SC-001 sea verificable sin ambigüedad? [Measurability, Spec §SC-001]
+- [x] CHK027 - ¿Define el spec cómo se cuenta la precisión cuando el valor esperado es `null` (si un `null` obtenido coincide)? [Measurability, Spec §SC-003, §SC-004]
 
 ## Flujo de validación y descarga
 
-- [ ] CHK028 - ¿Está definido qué acción constituye la "confirmación explícita" y si los campos pueden seguir editándose después de confirmar? [Clarity, Spec §FR-020]
-- [ ] CHK029 - ¿Es consistente FR-021a ("volver a descargar entrega el mismo JSON confirmado") con la posibilidad de editar después de la primera descarga? [Consistency, Spec §FR-020, §FR-021a]
-- [ ] CHK030 - ¿Están especificados el estado de espera y el mensaje que se muestran mientras dura la extracción (hasta 60 segundos)? [Gap]
-- [ ] CHK031 - ¿Está definido cómo se distinguen en pantalla los campos no obtenidos de los obtenidos? [Clarity, Spec §FR-017]
-- [ ] CHK032 - ¿Define FR-019a cómo se tratan los números negativos, el separador de miles y la coma como separador decimal (habitual en Argentina)? [Edge Case, Spec §FR-019a]
-- [ ] CHK033 - ¿Está definido si un campo de texto que el usuario deja vacío se descarga como `null` o como cadena vacía? [Gap, Spec §FR-019, §FR-019a]
-- [ ] CHK034 - ¿Están especificados el nombre del archivo JSON descargado y su codificación? [Gap, Spec §FR-021]
-- [ ] CHK035 - ¿Está definido qué pasa si el usuario sube un PDF nuevo en medio de una validación todavía no confirmada (¿se descarta sin aviso?)? [Coverage, Spec §FR-021a, §FR-022]
-- [ ] CHK036 - ¿Se especifican, o se excluyen de forma explícita, el idioma de la interfaz y los requisitos de accesibilidad? [Gap]
+- [x] CHK028 - ¿Está definido qué acción constituye la "confirmación explícita" y si los campos pueden seguir editándose después de confirmar? [Clarity, Spec §FR-020]
+- [x] CHK029 - ¿Es consistente FR-021a ("volver a descargar entrega el mismo JSON confirmado") con la posibilidad de editar después de la primera descarga? [Consistency, Spec §FR-020, §FR-021a]
+- [x] CHK030 - ¿Están especificados el estado de espera y el mensaje que se muestran mientras dura la extracción (hasta 60 segundos)? [Gap]
+- [x] CHK031 - ¿Está definido cómo se distinguen en pantalla los campos no obtenidos de los obtenidos? [Clarity, Spec §FR-017]
+- [x] CHK032 - ¿Define FR-019a cómo se tratan los números negativos, el separador de miles y la coma como separador decimal (habitual en Argentina)? [Edge Case, Spec §FR-019a]
+- [x] CHK033 - ¿Está definido si un campo de texto que el usuario deja vacío se descarga como `null` o como cadena vacía? [Gap, Spec §FR-019, §FR-019a]
+- [x] CHK034 - ¿Están especificados el nombre del archivo JSON descargado y su codificación? [Gap, Spec §FR-021]
+- [x] CHK035 - ¿Está definido qué pasa si el usuario sube un PDF nuevo en medio de una validación todavía no confirmada (¿se descarta sin aviso?)? [Coverage, Spec §FR-021a, §FR-022]
+- [x] CHK036 - ¿Se especifican, o se excluyen de forma explícita, el idioma de la interfaz y los requisitos de accesibilidad? [Gap]
 
 ## Trazabilidad y consistencia con el PRD
 
-- [ ] CHK037 - ¿Tienen respaldo en el PRD, como exige la constitución (principio VII), los requisitos que surgieron de las clarificaciones (FR-003a, FR-021a, FR-025, las filas agregables de FR-019)? [Conflict, Spec §Clarifications]
-- [ ] CHK038 - ¿Define el spec un límite, o lo excluye, para la cantidad de procesos simultáneos ahora que un usuario puede tener varias sesiones, dado que RNF-04 garantiza el tiempo solo con 5? [Gap, Spec §FR-003a, §SC-002]
-- [ ] CHK039 - ¿Citan todos los FR, escenarios y criterios de éxito al menos un identificador RF, RNF o AC del PRD, o están marcados como derivados de una clarificación? [Traceability]
+- [x] CHK037 - ¿Tienen respaldo en el PRD, como exige la constitución (principio VII), los requisitos que surgieron de las clarificaciones (FR-003a, FR-021a, FR-025, las filas agregables de FR-019)? [Conflict, Spec §Clarifications]
+- [x] CHK038 - ¿Define el spec un límite, o lo excluye, para la cantidad de procesos simultáneos ahora que un usuario puede tener varias sesiones, dado que RNF-04 garantiza el tiempo solo con 5? [Gap, Spec §FR-003a, §SC-002]
+- [x] CHK039 - ¿Citan todos los FR, escenarios y criterios de éxito al menos un identificador RF, RNF o AC del PRD, o están marcados como derivados de una clarificación? [Traceability]
 
 ## Notes
 
