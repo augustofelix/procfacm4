@@ -56,9 +56,11 @@ Quedan fuera (versión 2): unidad de medida, bonificación, alícuota de IVA, su
 ## FacturaIA (transporte, `src/procfac/ia/modelos.py`)
 
 Modelo espejo de `Factura` que se usa solo como `output_format` de la API de Claude: los
-mismos campos, todos nullable, con importes y cantidades como `float | str | None` y sin
-validadores. `procfac.ia` lo convierte en `Factura`; si la conversión falla, lanza
-`FallaExtraccionIA` (RF-26). Ningún otro módulo lo importa (principio I).
+mismos campos y sin validadores. La salida estructurada admite como máximo 16 parámetros
+con tipos unión, así que los textos son `str` (la IA devuelve `""` cuando un dato no
+figura), los números son `float | None` y `impuestos` e `items` son `list | None`.
+`procfac.ia` lo convierte en `Factura` pasando los `""` a `null`; si la conversión falla,
+lanza `FallaExtraccionIA` (RF-26). Ningún otro módulo lo importa (principio I).
 
 ## ResultadoExtraccion (respuesta de `POST /facturas/extraer`)
 

@@ -12,10 +12,13 @@ from tests.conftest import config_de_prueba
 
 
 def factura_ia(**cambios):
-    valores = {campo: None for campo in FacturaIA.model_fields}
+    valores = {
+        campo: None if campo in ("punto_venta", "numero_comprobante", "subtotal", "total") else ""
+        for campo in FacturaIA.model_fields
+    }
     valores.update(
         punto_venta=1, numero_comprobante=123, cuit_emisor="30-71234567-8",
-        fecha_comprobante="2026-03-15", subtotal=1000.004, total="1210.005",
+        fecha_comprobante="2026-03-15", subtotal=1000.004, total=1210.005,
         impuestos=[ImpuestoIA(descripcion_impuesto="IVA 21%", importe=210)],
         items=[ItemIA(codigo="P1", descripcion="Tornillo", cantidad=0.3333, precio_unitario=10,
                       subtotal_item=3.333)],
@@ -72,6 +75,21 @@ async def test_convierte_a_factura_normalizada():
     assert factura.cuit_emisor == "30712345678"
     assert str(factura.subtotal) == "1000.00" and str(factura.total) == "1210.01"
     assert str(factura.items[0].cantidad) == "0.3333"
+    assert factura.razon_social_emisor is None  # "" de la IA → null
+
+
+def _uniones(esquema: dict) -> int:
+    """Parámetros con tipo unión (anyOf o lista de tipos) en todo el esquema."""
+    total = 0
+    for definicion in [esquema, *esquema.get("$defs", {}).values()]:
+        for propiedad in definicion.get("properties", {}).values():
+            total += "anyOf" in propiedad or isinstance(propiedad.get("type"), list)
+    return total
+
+
+def test_esquema_dentro_del_limite_de_uniones_de_la_api():
+    # La API rechaza con 400 los esquemas con más de 16 parámetros con uniones.
+    assert _uniones(FacturaIA.model_json_schema()) <= 16
 
 
 def _errores_del_sdk():
@@ -102,9 +120,10 @@ async def test_errores_del_sdk_son_falla_sin_reintento(error):
         _respuesta(factura_ia(), stop_reason="max_tokens"),
         _respuesta(None),
         _respuesta(factura_ia(cuit_emisor="123456789")),
+        _respuesta(factura_ia(fecha_comprobante="2026-02-30")),
         _respuesta(factura_ia(fecha_comprobante="15/03/2026")),
     ],
-    ids=["refusal", "max_tokens", "sin_salida", "cuit_9_digitos", "fecha_invalida"],
+    ids=["refusal", "max_tokens", "sin_salida", "cuit_9_digitos", "fecha_inexistente", "fecha_invalida"],
 )
 async def test_respuestas_invalidas_son_falla_sin_reintento(respuesta):
     extractor, mensajes = _extractor(respuesta)
@@ -117,7 +136,7 @@ async def test_salida_que_no_parsea_es_falla():
     import pydantic
 
     try:
-        FacturaIA.model_validate({"punto_venta": "no"})
+        FacturaIA.model_validate({"punto_venta": "no"})  # falta todo y el tipo es inválido
     except pydantic.ValidationError as error:
         error_de_parseo = error
     extractor, mensajes = _extractor(error=error_de_parseo)
