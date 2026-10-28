@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://procfac.local/esquema-salida.schema.json",
   "title": "Factura A - Esquema de salida (PRD-001)",
-  "description": "JSON de una factura A, tal como lo devuelve la extracción (RF-25) y como se descarga (RF-07). Lo corregido por el usuario solo se restringe por tipo en los campos numéricos (RF-30), por lo que un JSON descargado puede no cumplir los patrones de texto.",
+  "description": "JSON de una factura A, tal como lo devuelve la extracción (RF-25) y como se descarga (RF-07). Lo corregido por el usuario solo se restringe por tipo en los campos numéricos (RF-30), por lo que un JSON descargado puede no cumplir los patrones de texto ni los mínimos numéricos; el esquema completo se garantiza solo para el resultado de la extracción (AC-01).",
   "type": "object",
   "additionalProperties": false,
   "required": [
