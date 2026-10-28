@@ -52,7 +52,7 @@ Constitución v1.0.1. Verificado antes de la fase 0 y de nuevo después del dise
 
 | Principio | Cómo lo cumple el diseño | Estado |
 |---|---|---|
-| I. Lógica de IA aislada | Solo `src/procfac/ia/` importa `anthropic` y arma el prompt. Interfaz: `async def extraer_factura(texto: str) -> Factura`, que lanza `FallaExtraccionIA`. `procesamiento.py` la recibe por inyección, y los tests la reemplazan por un doble. Un test verifica que ningún otro módulo importe `anthropic`. | ✅ |
+| I. Lógica de IA aislada | Solo `src/procfac/ia/` importa `anthropic` y arma el prompt. Interfaz: el protocolo `Extractor` (`async def __call__(self, texto: str) -> Factura`, que lanza `FallaExtraccionIA`), implementado por `ExtractorClaude`. `procesamiento.py` recibe un `Extractor` por inyección, y los tests lo reemplazan por el doble `ExtractorFalso`. Un test verifica que ningún otro módulo importe `anthropic`. | ✅ |
 | II. Solo facturas tipo A | `clasificacion.py` exige el código de comprobante 01 y excluye FCE MiPyME A, M, B, C, E, X, notas, recibos, remitos y liquidaciones **antes** de llamar a la IA ([research §R3](research.md)). | ✅ |
 | III. Solo PDF nativo | Rechazo de lo que no es PDF (422), de los PDF protegidos, dañados, escaneados (sin texto), con más de una factura o con más de 3 páginas, sin invocar la IA. A la IA se le envía el texto de pdfplumber; no hay OCR. | ✅ |
 | IV. JSON con esquema y validación del usuario | `esquema.Factura` (Pydantic v2) valida la salida de la IA; si no cumple → falla sin reintento. La UI muestra todo, permite corregir y completar, y habilita la descarga solo tras confirmar. | ✅ |
@@ -109,7 +109,8 @@ src/procfac/
 ├── procesamiento.py     # verificar(), extraer(): orquesta, campos no obtenidos
 ├── auth.py              # usuarios, login, tokens en memoria
 ├── ia/                  # ÚNICO módulo que importa anthropic (principio I)
-│   ├── __init__.py      # extraer_factura(), FallaExtraccionIA
+│   ├── __init__.py      # protocolo Extractor, FallaExtraccionIA; exporta ExtractorClaude
+│   ├── cliente.py       # ExtractorClaude: AsyncAnthropic(timeout=60, max_retries=0)
 │   ├── modelos.py       # FacturaIA (transporte)
 │   └── prompt.py        # instrucciones del sistema
 ├── api/
