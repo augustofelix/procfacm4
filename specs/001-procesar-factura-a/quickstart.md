@@ -20,7 +20,10 @@
   espera de 60 s, máximo de 3 páginas).
 - Para las pruebas de aceptación: copiar a mano en `tests/data/` (ignorada por git) el
   Conjunto de referencia (`referencia/*.pdf` y `*.json`), el PDF de AC-36 y los PDF armados
-  de AC-11, AC-13, AC-14, AC-18 y AC-33. Borrarlos al terminar.
+  de AC-11, AC-13, AC-14, AC-18 y AC-33. Borrarlos al terminar. Estructura:
+  `referencia/<nombre>.pdf` + `<nombre>.json`; `armados/ac36.pdf` + `ac36.json`,
+  `armados/ac11.pdf` + `ac11.json`, `armados/ac13.pdf`, `armados/ac14/*.pdf`,
+  `armados/ac18/*.pdf` y `armados/ac33.pdf` (detalle en `tests/aceptacion/conftest.py`).
 
 ## Instalar y correr
 
