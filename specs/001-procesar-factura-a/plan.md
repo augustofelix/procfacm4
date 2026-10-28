@@ -131,8 +131,8 @@ tests/
 ```
 
 **Structure Decision**: un solo paquete `procfac` con layout `src/`, porque la API y la UI
-comparten el esquema (`esquema.py`) y se distribuyen juntas. La UI solo importa `esquema` y
-`cliente_api`; nunca `ia`, `clasificacion` ni `procesamiento`, que corren en la API.
+comparten el esquema (`esquema.py`) y se distribuyen juntas. La UI solo importa `esquema`,
+`logs` y `cliente_api`; nunca `ia`, `clasificacion` ni `procesamiento`, que corren en la API.
 
 ## Complexity Tracking
 
