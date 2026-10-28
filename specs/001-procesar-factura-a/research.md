@@ -170,6 +170,8 @@ cada página (desarrolladas con tests primero, principio V).
     reemplazado por un doble (la constitución prohíbe depender de la API real). PDF de
     prueba generados en memoria con `fpdf2` (dependencia de desarrollo), incluidos el
     protegido con contraseña, el escaneado (solo imagen) y el de 4 páginas.
+  - `tests/ui/`: Streamlit `AppTest` sobre `src/procfac/ui/app.py`, con `cliente_api`
+    simulado con `monkeypatch` (sin API ni Claude).
   - `tests/aceptacion/` (marcador `referencia`): usa la API real de Claude y
     `tests/data/` (Conjunto de referencia, AC-36, PDF armados). Se omite si faltan los
     datos o la API key. Calcula las métricas de RNF-03 y los tiempos de RNF-02 y RNF-04.

@@ -121,7 +121,7 @@ login ──ok──▶ carga ──PDF admitido──▶ consentimiento ──a
                │  └──── PDF rechazado ─────┼──────────────────────────┘                  ▼
                │        (mensaje)          ▼                                         descargable
                └──────────────────────── carga ◀── cancela (validacion) ──┐              │
-               └──────────────────────── carga ◀── "Procesar otra factura" ─────────────┘
+               └──────────────────────── carga ◀── "Procesar otra factura" o PDF nuevo ─┘
 ```
 
 - Volver a `carga` descarta de `st.session_state` el PDF, el resultado y la factura.
