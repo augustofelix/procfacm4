@@ -17,6 +17,11 @@ Resuelve las incógnitas del Technical Context y los huecos del checklist genera
   (CHK007). La sesión de Streamlit es por pestaña, lo que da gratis RF-31 (varias sesiones
   por usuario, cada una con su proceso). RNF-06 se cumple porque, tras el consentimiento,
   hay una sola petición (`POST /facturas/extraer`) que devuelve los campos.
+- **Proceso abandonado** (CHK007): si el usuario cierra el navegador, la API no guarda nada
+  del proceso y la UI pierde su `st.session_state` cuando Streamlit da por cerrada esa
+  sesión; los datos viven solo en memoria y nunca en disco (RNF-07). No se agrega un
+  vencimiento propio: el cierre y el vencimiento de sesión están fuera de alcance. Hay que
+  confirmar al implementar cuánto tarda Streamlit en descartar una sesión desconectada.
 - **Alternatives considered**: guardar el proceso en la API con un ID (obliga a vencer
   procesos, a controlar dueño por ID y a más superficie para fugas entre sesiones); UI sola
   sin API (no cumple AC-05, AC-19, AC-30 ni AC-35, que exigen una API con códigos HTTP).
@@ -102,6 +107,10 @@ cada página (desarrolladas con tests primero, principio V).
   dígitos y luego exactamente 11 dígitos; importes redondeados a 2 decimales con
   `ROUND_HALF_UP`; `cantidad` sin redondear; `fecha_comprobante` debe ser `AAAA-MM-DD`
   válida. Si después de normalizar algo no cumple → falla.
+- **Qué va en `impuestos`** (CHK024, RF-04): un par por cada línea de tributo del pie del
+  comprobante que no sea el subtotal ni el total: IVA por alícuota, percepciones (IVA,
+  Ingresos Brutos, etc.), impuestos internos y otros tributos. `descripcion_impuesto` se
+  copia tal como figura en el PDF. Las líneas con importe 0 se incluyen si están impresas.
 - **Rationale**: `messages.parse` con Pydantic es el camino recomendado del SDK; separar el
   modelo de transporte del de dominio evita depender de qué restricciones de JSON Schema
   acepta la salida estructurada.

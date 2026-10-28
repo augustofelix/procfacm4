@@ -276,7 +276,9 @@ inválidas.
 - **FR-019**: El sistema DEBE permitir corregir cualquier campo extraído y completar los no
   obtenidos antes de la descarga, sin validar los valores ingresados salvo la restricción de tipo de FR-019a (RF-13, RF-16, AC-09,
   AC-12). En las listas `items` e `impuestos` el usuario DEBE poder editar, agregar y
-  eliminar filas, incluso cuando la lista vino en `null` o vacía.
+  eliminar filas, incluso cuando la lista vino en `null` o vacía. Agregar y eliminar filas
+  se interpreta como parte de corregir y completar los campos `items` e `impuestos`
+  (RF-13, RF-16); no es un requisito nuevo respecto del PRD (principio VII).
 - **FR-019a**: En los campos numéricos del Esquema de salida la pantalla de validación DEBE
   admitir solo números: enteros en `punto_venta` y `numero_comprobante`, y decimales con
   punto como separador en `subtotal`, `total`, `importe`, `cantidad`, `precio_unitario` y
@@ -340,14 +342,16 @@ inválidas.
 
 - **SC-001**: Con un solo usuario activo, el percentil 95 del tiempo entre la aceptación del
   consentimiento y la presentación de los campos extraídos es menor a 30 segundos sobre las
-  20 facturas del Conjunto de referencia procesadas de a una (RNF-02, AC-27).
+  20 facturas del Conjunto de referencia procesadas de a una; el p95 se calcula por rango
+  más cercano: se ordenan los 20 tiempos y se toma el 19.º (RNF-02, AC-27).
 - **SC-002**: Con 5 usuarios procesando un PDF cada uno al mismo tiempo, cada uno ve sus
   campos extraídos en menos de 30 segundos desde que aceptó el consentimiento (RNF-04,
   AC-29).
 - **SC-003**: Cada campo de encabezado y de totales (`subtotal`, `impuestos`, `total`)
   coincide exactamente con el JSON esperado en al menos el 90% de las facturas del Conjunto
-  de referencia; `impuestos` coincide si tiene los mismos pares sin importar el orden
-  (RNF-03, AC-20, AC-21).
+  de referencia; `impuestos` coincide si tiene los mismos pares sin importar el orden; un
+  `null` obtenido coincide con un `null` esperado y no con un valor (regla que vale también
+  para SC-004) (RNF-03, AC-20, AC-21).
 - **SC-004**: La cantidad de ítems coincide en al menos el 90% de las facturas, las
   cantidades de todos los ítems coinciden en al menos el 90%, y cada campo `codigo`,
   `descripcion`, `precio_unitario` y `subtotal_item` coincide en todos los ítems en al menos
@@ -382,6 +386,9 @@ inválidas.
   de respuesta HTTP.
 - La sesión no se cierra ni vence en el MVP; no hay cierre de sesión.
 - No se limita el tamaño en bytes del PDF.
+- Facturas en moneda extranjera: los importes se extraen tal como figuran, sin indicar la
+  moneda ni convertirlos; el Esquema de salida no tiene campo de moneda y agregarlo
+  requiere modificar el PRD.
 - Fuera de alcance (PRD): PDF escaneados y OCR, email, otros comprobantes que no sean
   factura A, lotes, integración con sistemas contables, validación de datos corregidos (salvo la restricción de tipo de FR-019a),
   gestión de usuarios, reintentos automáticos al servicio de IA y los campos de ítem de la
