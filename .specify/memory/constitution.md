@@ -1,3 +1,16 @@
+<!--
+Informe de impacto de sincronización
+- Versión: 1.0.0 → 1.0.1 (PARCHE: aclaración de una exclusión existente)
+- Principio modificado: VII. Alcance limitado al PRD vigente — la exclusión "validación de
+  los datos corregidos" ahora exceptúa la restricción de tipo de los campos numéricos
+  (RF-30, AC-37), incorporada al PRD el 2026-10-27.
+- Principios agregados o eliminados: ninguno.
+- Secciones agregadas o eliminadas: ninguna.
+- Plantillas: .specify/templates/plan-template.md ✅ sin cambios (la verificación contra la
+  constitución es genérica); spec-template.md ✅ y tasks-template.md ✅ sin cambios.
+- Documentos: AGENTS.md ✅ actualizado con la misma excepción; PRD.md ✅ (RF-30, AC-37).
+- Pendientes: ninguno.
+-->
 # Constitución de Procesamiento de Factura (ProcFac)
 
 ## Principios fundamentales
@@ -72,9 +85,10 @@ de la API y el acceso a la aplicación.
 No se agregan funcionalidades que no estén en el PRD vigente. Todo requerimiento nuevo DEBE
 incorporarse primero al PRD (con sus identificadores RF, RNF y AC) antes de especificarse o
 implementarse. Las exclusiones explícitas del MVP (validación de los datos corregidos,
-correo electrónico, integración con sistemas contables, gestión de usuarios, cierre o
-vencimiento de sesión, reintentos automáticos, límite de tamaño en bytes y campos de ítem de
-la versión 2) DEBEN respetarse.
+salvo la restricción de tipo de los campos numéricos de RF-30; correo electrónico,
+integración con sistemas contables, gestión de usuarios, cierre o vencimiento de sesión,
+reintentos automáticos, límite de tamaño en bytes y campos de ítem de la versión 2) DEBEN
+respetarse.
 
 Razón: mantiene el MVP acotado y verificable contra sus criterios de aceptación, y evita
 complejidad sin respaldo en los requerimientos.
@@ -123,4 +137,4 @@ operativa para agentes y DEBE mantenerse consistente con ambos.
 - Cumplimiento: toda revisión de especificación, plan, tareas o código DEBE verificar que se
   cumplan estos principios; un incumplimiento no justificado bloquea la integración.
 
-**Versión**: 1.0.0 | **Ratificada**: 2026-10-26 | **Última enmienda**: 2026-10-26
+**Versión**: 1.0.1 | **Ratificada**: 2026-10-26 | **Última enmienda**: 2026-10-27
