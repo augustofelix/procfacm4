@@ -100,6 +100,9 @@ Se construye desde `bytes` con `io.BytesIO`; nunca desde una ruta.
 `mas_de_3_paginas`, `no_es_factura_a`, `mas_de_una_factura`. Orden de evaluación en
 [research.md §R3](research.md).
 
+`Rechazo(Exception)`, con el atributo `motivo: MotivoRechazo`, también vive en
+`clasificacion.py`; la API lo convierte en HTTP 422.
+
 ## Usuario y sesión (`src/procfac/auth.py`)
 
 - **Usuario**: `nombre: str`, `clave: str`, cargados desde el `.env`; de 1 a 5, sin nombres
