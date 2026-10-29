@@ -17,8 +17,8 @@ de venta, código y descripción de los ítems) tal como figuran en el texto.
 - subtotal: el importe neto antes de impuestos. total: el importe total de la factura.
 - impuestos: un par por cada línea de tributo del pie que no sea el subtotal ni el total \
 (IVA por alícuota, percepciones, impuestos internos y otros tributos), con \
-descripcion_impuesto copiada tal como figura. Incluí las líneas con importe 0 si están \
-impresas. Si el comprobante no tiene impuestos, devolvé una lista vacía.
+descripcion_impuesto copiada tal como figura. No incluyas las líneas con importe 0. Si el \
+comprobante no tiene impuestos, devolvé una lista vacía.
 - items: los ítems del detalle en el orden del comprobante, una sola vez cada uno aunque el \
 texto repita copias. Si el comprobante no tiene ítems, devolvé una lista vacía.
 """

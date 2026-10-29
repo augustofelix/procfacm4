@@ -110,7 +110,8 @@ cada página (desarrolladas con tests primero, principio V).
 - **Qué va en `impuestos`** (CHK024, RF-04): un par por cada línea de tributo del pie del
   comprobante que no sea el subtotal ni el total: IVA por alícuota, percepciones (IVA,
   Ingresos Brutos, etc.), impuestos internos y otros tributos. `descripcion_impuesto` se
-  copia tal como figura en el PDF. Las líneas con importe 0 se incluyen si están impresas.
+  copia tal como figura en el PDF. Las líneas con importe 0 no se incluyen: no aportan al
+  cálculo contable y el Conjunto de referencia no las registra.
 - **Rationale**: `messages.parse` con Pydantic es el camino recomendado del SDK; separar el
   modelo de transporte del de dominio evita depender de qué restricciones de JSON Schema
   acepta la salida estructurada.
