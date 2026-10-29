@@ -50,13 +50,47 @@ def test_pagina_sin_texto_es_escaneado(pagina_vacia):
 
 
 # (5) Tipo de comprobante, solo por código.
-@pytest.mark.parametrize("texto_codigo", ["COD. 01", "Cód. 001", "Código: 01", "CODIGO N° 01"])
+@pytest.mark.parametrize(
+    "texto_codigo", ["COD. 01", "Cód. 001", "Código: 01", "CODIGO N° 01", "Código Nro001 Factura"]
+)
 def test_formatos_del_codigo_01(texto_codigo):
     assert codigo_comprobante(f"FACTURA A\n{texto_codigo}\nPunto de Venta: 1") == 1
 
 
 def test_codigo_no_salta_de_linea():
     assert codigo_comprobante("Código\n001") is None
+
+
+# Sin rótulo: el código va junto a la letra del recuadro.
+@pytest.mark.parametrize(
+    "texto, codigo",
+    [
+        ("A\n01 FACTURA\nNº: 00003-00001429", 1),
+        ("ORIGINAL\nA\nComprobante: 0012 - 00075812\n001 Fecha Emisión:01/09/2026", 1),
+        ("B\n06 FACTURA\nNº: 00003-00001429", 6),
+    ],
+)
+def test_codigo_junto_a_la_letra(texto, codigo):
+    assert codigo_comprobante(texto) == codigo
+
+
+@pytest.mark.parametrize(
+    "texto",
+    [
+        "A\n01/09/2026",  # fecha
+        "A\n0012 - 00075812",  # número de comprobante
+        "A\n1 FACTURA",  # sin cero a la izquierda
+        "A\nuno\ndos\ntres\n01 FACTURA",  # lejos de la letra
+        "01 FACTURA",  # sin letra
+    ],
+)
+def test_numeros_que_no_son_el_codigo(texto):
+    assert codigo_comprobante(texto) is None
+
+
+def test_factura_a_con_codigo_junto_a_la_letra_se_admite():
+    texto = texto_comprobante().replace("FACTURA    A\nCOD. 01", "A\n01 FACTURA")
+    assert _clasificar([texto]).admitido
 
 
 @pytest.mark.parametrize("tipo", [t for t in COMPROBANTES if t != "factura_a"])

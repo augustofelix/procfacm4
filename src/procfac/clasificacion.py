@@ -10,10 +10,16 @@ from enum import StrEnum
 
 CODIGO_FACTURA_A = 1
 
-# "COD. 01", "Cód. 001", "Código: 01", "CODIGO N° 01"; sin cruzar saltos de línea.
+# "COD. 01", "Cód. 001", "Código: 01", "CODIGO N° 01", "Código Nro001"; sin cruzar saltos de línea.
 _CODIGO = re.compile(
-    r"\b(?:COD|C[ÓO]D|C[ÓO]DIGO)\b\.?[ \t]*(?:N[°º]?\.?[ \t]*)?:?[ \t]*(\d{1,3})\b",
+    r"\b(?:COD|C[ÓO]D|C[ÓO]DIGO)\b\.?[ \t]*(?:N(?:ro|[°º])?\.?[ \t]*)?:?[ \t]*(\d{1,3})\b",
     re.IGNORECASE,
+)
+# Sin rótulo: "01 FACTURA" o "001 Fecha..." al inicio de una de las 3 líneas que siguen
+# a la letra sola del recuadro. El cero a la izquierda y el espacio o fin de línea
+# después descartan fechas ("01/09/2026") y números de comprobante ("0012 - ...").
+_CODIGO_JUNTO_A_LETRA = re.compile(
+    r"^[ \t]*[A-Z][ \t]*\n(?:[^\n]*\n){0,2}?[ \t]*(0\d{1,2})(?=[ \t]|$)", re.MULTILINE
 )
 _PUNTO_Y_NUMERO = re.compile(
     r"Punto[ \t]+de[ \t]+Venta[ \t]*:?[ \t]*(\d{1,5})[ \t]+"
@@ -53,7 +59,7 @@ def es_pdf(nombre: str, contenido: bytes) -> bool:
 
 
 def codigo_comprobante(texto_pagina: str) -> int | None:
-    coincidencia = _CODIGO.search(texto_pagina)
+    coincidencia = _CODIGO.search(texto_pagina) or _CODIGO_JUNTO_A_LETRA.search(texto_pagina)
     return int(coincidencia.group(1)) if coincidencia else None
 
 
