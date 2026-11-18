@@ -67,16 +67,26 @@ def es_factura_a(texto_pagina: str) -> bool:
     return codigo_comprobante(texto_pagina) == CODIGO_FACTURA_A
 
 
-def identificador(texto_pagina: str) -> tuple[int, int] | None:
-    """(punto de venta, número) del comprobante, sin ceros a la izquierda."""
-    coincidencia = _PUNTO_Y_NUMERO.search(texto_pagina)
-    if coincidencia:
-        return int(coincidencia.group(1)), int(coincidencia.group(2))
+def identificadores(texto_pagina: str) -> set[tuple[int, int]]:
+    """Todos los (punto de venta, número) de comprobantes de la página, sin ceros a la izquierda.
+
+    Una página puede tener más de una factura (RF-18): se buscan todas las apariciones,
+    no solo la primera. Los números de otros comprobantes citados (remitos, etc.) no cuentan.
+    """
+    encontrados = {
+        (int(c.group(1)), int(c.group(2))) for c in _PUNTO_Y_NUMERO.finditer(texto_pagina)
+    }
     for coincidencia in _NUMERO_CON_GUION.finditer(texto_pagina):
         inicio_linea = texto_pagina.rfind("\n", 0, coincidencia.start()) + 1
         if not _REFERENCIA.search(texto_pagina[inicio_linea : coincidencia.start()]):
-            return int(coincidencia.group(1)), int(coincidencia.group(2))
-    return None
+            encontrados.add((int(coincidencia.group(1)), int(coincidencia.group(2))))
+    return encontrados
+
+
+def identificador(texto_pagina: str) -> tuple[int, int] | None:
+    """El (punto de venta, número) del comprobante si la página tiene uno solo."""
+    encontrados = identificadores(texto_pagina)
+    return next(iter(encontrados)) if len(encontrados) == 1 else None
 
 
 def _caracteres(texto: str) -> int:
@@ -125,16 +135,16 @@ def clasificar(
     if not paginas or any(_caracteres(p) < min_caracteres_por_pagina for p in paginas):
         return _rechazo(MotivoRechazo.no_es_factura_a)
 
-    identificadores = [identificador(p) for p in paginas]
+    por_pagina = [identificadores(p) for p in paginas]
     for indice, texto in enumerate(paginas):
         codigo = codigo_comprobante(texto)
-        inicio_de_copia = indice == 0 or identificadores[indice] is not None
+        inicio_de_copia = indice == 0 or bool(por_pagina[indice])
         if codigo is not None and codigo != CODIGO_FACTURA_A:
             return _rechazo(MotivoRechazo.no_es_factura_a)
         if inicio_de_copia and codigo is None:
             return _rechazo(MotivoRechazo.no_es_factura_a)
 
-    if len({i for i in identificadores if i is not None}) > 1:
+    if len(set().union(*por_pagina)) > 1:
         return _rechazo(MotivoRechazo.mas_de_una_factura)
 
     paginas_a_enviar, copias = paginas_primera_copia(paginas)
