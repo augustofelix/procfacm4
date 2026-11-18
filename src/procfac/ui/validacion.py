@@ -2,7 +2,7 @@
 
 import math
 import time
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 
 import pandas as pd
 import streamlit as st
@@ -34,6 +34,11 @@ COLUMNAS_IMPUESTOS = ["descripcion_impuesto", "importe"]
 COLUMNAS_ITEMS = ["codigo", "descripcion", "cantidad", "precio_unitario", "subtotal_item"]
 NUMERICAS = {"importe", "cantidad", "precio_unitario", "subtotal_item"}
 NO_OBTENIDO = "No obtenido"
+CENTAVO = Decimal("0.01")
+ADVERTENCIA_SUBTOTALES = (
+    "La suma de subtotal_item de los ítems ({suma}) no coincide con el subtotal ({subtotal}). "
+    "Revisá los valores; podés confirmar y descargar igual."
+)
 
 
 def _vacio(valor) -> bool:
@@ -159,6 +164,26 @@ def mostrar_campos(
         impuestos_era_null=getattr(factura, "impuestos") is None,
         items_era_null=getattr(factura, "items") is None,
     )
+
+
+def _a_centavos(valor) -> Decimal:
+    return (Decimal(0) if _vacio(valor) else Decimal(str(valor))).quantize(CENTAVO, ROUND_HALF_UP)
+
+
+def diferencia_subtotales(factura: Factura | FacturaEditada) -> tuple[Decimal, Decimal] | None:
+    """(suma de subtotal_item, subtotal) si no son iguales a 2 decimales; null vale 0 (RF-34)."""
+    suma = _a_centavos(sum((Decimal(0) if _vacio(i.subtotal_item) else Decimal(str(i.subtotal_item))
+                            for i in factura.items or []), Decimal(0)))
+    subtotal = _a_centavos(factura.subtotal)
+    return None if suma == subtotal else (suma, subtotal)
+
+
+def advertir_subtotales(lugar, factura: Factura | FacturaEditada) -> None:
+    """Advierte sin bloquear la confirmación ni la descarga (RF-34, AC-41, AC-42)."""
+    diferencia = diferencia_subtotales(factura)
+    if diferencia:
+        suma, subtotal = diferencia
+        lugar.warning(ADVERTENCIA_SUBTOTALES.format(suma=suma, subtotal=subtotal))
 
 
 def registrar_descarga(usuario: str, inicio_proceso: float) -> None:

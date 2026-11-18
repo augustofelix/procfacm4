@@ -13,7 +13,7 @@ from procfac.esquema import FacturaEditada, nombre_archivo, serializar_json
 from procfac.logs import configurar_logs, registrar_proceso
 from procfac.ui import cliente_api, estilo
 from procfac.ui.cliente_api import ErrorAPI
-from procfac.ui.validacion import mostrar_campos, registrar_descarga
+from procfac.ui.validacion import advertir_subtotales, mostrar_campos, registrar_descarga
 
 ADVERTENCIA = (
     "El texto de esta factura se enviará a la API de Claude (Anthropic) para extraer sus "
@@ -144,7 +144,9 @@ def pantalla_validacion() -> None:
     st.title("Validar los datos")
     if ss.resultado.comprobante_ilegible:
         st.warning(MENSAJE_ILEGIBLE)
+    aviso = st.empty()  # arriba de los campos, con los valores que quedan en pantalla
     factura = mostrar_campos(ss.factura, True, ss.resultado.campos_no_obtenidos, str(ss.proceso))
+    advertir_subtotales(aviso, factura)
     confirmar, cancelar = st.columns(2)
     if confirmar.button("Confirmar", key="confirmar", type="primary"):
         ss.factura = factura
@@ -158,6 +160,7 @@ def pantalla_validacion() -> None:
 
 def pantalla_descargable() -> None:
     st.title("Descargar el JSON")
+    advertir_subtotales(st, ss.factura)
     mostrar_campos(ss.factura, False, ss.resultado.campos_no_obtenidos, f"{ss.proceso}-confirmado")
     st.download_button(
         "Descargar JSON",

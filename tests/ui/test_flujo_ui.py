@@ -92,3 +92,27 @@ def test_subir_otro_pdf_desde_la_descarga(api):
     assert at.session_state["estado"] == "consentimiento"
     assert at.session_state["pdf"] == ("otra.pdf", b"%PDF-1.4 otra factura")
     assert "resultado" not in at.session_state and "factura" not in at.session_state
+
+
+SUBTOTALES = "no coincide con el subtotal"
+
+
+def test_advertencia_de_subtotales_se_actualiza_al_corregir(api):
+    """AC-41: se advierte con los valores extraídos y desaparece al corregirlos."""
+    api.resultado = resultado(factura_de_ejemplo(subtotal="900"))
+    at = hasta_validacion(api)
+    avisos = [w.value for w in at.warning if SUBTOTALES in w.value]
+    assert avisos and "1000.00" in avisos[0] and "900.00" in avisos[0]
+    widget(at.number_input, "subtotal", at).set_value(1000.0).run()
+    assert not any(SUBTOTALES in w.value for w in at.warning)
+
+
+def test_advertencia_de_subtotales_no_bloquea_la_descarga(api):
+    """AC-42: se puede confirmar y descargar; la advertencia se repite en la descarga."""
+    api.resultado = resultado(factura_de_ejemplo(subtotal="900"))
+    at = hasta_validacion(api)
+    at.button(key="confirmar").click().run()
+    assert at.session_state["estado"] == "descargable"
+    assert any(SUBTOTALES in w.value for w in at.warning)
+    assert len(at.get("download_button")) == 1
+    assert json.loads(serializar_json(at.session_state["factura"]))["subtotal"] == 900.0
