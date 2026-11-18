@@ -135,6 +135,28 @@ def test_dos_facturas_distintas():
     assert _clasificar(paginas).motivo == MotivoRechazo.mas_de_una_factura
 
 
+def test_dos_facturas_en_la_misma_pagina():
+    """Corrección del profesor: la 123 y la 999 en una página no pasan como una sola."""
+    pagina = texto_comprobante(numero=123) + "\n" + texto_comprobante(numero=999)
+    assert _clasificar([pagina]).motivo == MotivoRechazo.mas_de_una_factura
+
+
+def test_dos_facturas_en_la_misma_pagina_con_guion():
+    pagina = texto_comprobante(numero=123) + "\nFACTURA\nCOD. 01\nN° 0001-00000999\n"
+    assert _clasificar([pagina]).motivo == MotivoRechazo.mas_de_una_factura
+
+
+def test_misma_factura_repetida_en_la_pagina_se_admite():
+    # El número impreso dos veces (encabezado y pie) o con otro formato es una sola factura.
+    pagina = texto_comprobante(numero=123) + "\nN° 0001-00000123\n"
+    assert _clasificar([pagina]).admitido
+
+
+def test_copias_en_la_misma_pagina_se_admiten():
+    pagina = texto_comprobante(leyenda="ORIGINAL") + "\n" + texto_comprobante(leyenda="DUPLICADO")
+    assert _clasificar([pagina]).admitido
+
+
 def test_mismo_identificador_con_y_sin_ceros():
     paginas = [
         texto_comprobante(leyenda="ORIGINAL"),

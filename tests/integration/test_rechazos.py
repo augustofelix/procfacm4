@@ -60,6 +60,13 @@ async def test_mas_de_una_factura(cliente, extractor, ruta):
 
 
 @pytest.mark.parametrize("ruta", RUTAS)
+async def test_dos_facturas_en_la_misma_pagina(cliente, extractor, ruta):
+    """Corrección del profesor: la 123 y la 999 en una sola página se rechazan."""
+    pdf = pdf_factura_a([texto_comprobante(numero=123) + "\n" + texto_comprobante(numero=999)])
+    _verificar(await _enviar(cliente, ruta, {"archivo": ("f.pdf", pdf)}), "mas_de_una_factura", extractor)
+
+
+@pytest.mark.parametrize("ruta", RUTAS)
 @pytest.mark.parametrize("caso", FUERA_DE_ALCANCE)
 async def test_no_es_factura_a(cliente, extractor, ruta, caso):
     respuesta = await _enviar(cliente, ruta, {"archivo": ("f.pdf", FUERA_DE_ALCANCE[caso])})
