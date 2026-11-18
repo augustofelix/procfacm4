@@ -84,10 +84,11 @@ de salida" del [PRD](PRD.md).
 
 ```
 config/procfac.ini      Configuración general (sin secretos)
+.streamlit/config.toml  Tema visual de la UI (colores, tipografía y radios)
 .env.example            Plantilla del .env con la API key y los usuarios
 src/procfac/
   api/                  App FastAPI, endpoints y lectura del multipart
-  ui/                   App Streamlit, cliente de la API y validación de campos
+  ui/                   App Streamlit, cliente de la API, validación de campos y estilo
   pdf/                  Lectura del PDF en memoria
   ia/                   Cliente de Claude, prompt y modelos
   clasificacion.py      Detección de factura A, cantidad de facturas y copias
@@ -123,6 +124,23 @@ PROCFAC_CLAVE_1=...
 
 Debe haber entre 1 y 5 usuarios. La configuración general (URL y puerto de la API,
 modelo, esfuerzo, tiempo de espera, máximo de páginas) está en `config/procfac.ini`.
+
+## Estilo de la UI
+
+La interfaz usa la paleta, la tipografía (Inter) y los radios del template de diseño
+`templateweb`, sin su marca ni sus imágenes:
+
+- **Login:** pantalla dividida, con un panel azul con la marca y el propósito de la app
+  a la izquierda y el formulario a la derecha. En pantallas angostas se ve solo el
+  formulario.
+- **Resto de las pantallas:** barra lateral con la marca, los pasos del proceso (cargar,
+  consentimiento, validar, descargar) con el actual resaltado y el usuario con sesión;
+  el contenido va en una tarjeta blanca.
+
+Los colores base están en `.streamlit/config.toml` (se leen al levantar la UI, así que
+un cambio requiere reiniciar `make dev`); el resto de los estilos, en
+`src/procfac/ui/estilo.py`. El estilo es solo visual: los textos, las pantallas y el
+flujo son los de [`contracts/ui.md`](specs/001-procesar-factura-a/contracts/ui.md).
 
 ## Cómo correr
 
