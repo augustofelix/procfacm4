@@ -13,13 +13,13 @@ Pydantic v2 en `src/procfac/esquema.py`, salvo que se indique otro módulo.
 | `numero_comprobante` | `int` | sí | ≥ 0; se serializa sin ceros a la izquierda |
 | `cuit_emisor` | `str` | sí | se quitan los caracteres que no son dígitos; después, exactamente 11 dígitos |
 | `razon_social_emisor` | `str` | sí | libre, tal como figura en el PDF |
-| `domicilio_emisor` | `str` | sí | libre |
-| `localidad_emisor` | `str` | sí | libre |
+| `domicilio_emisor` | `str` | sí | solo calle, número, piso y departamento tal como figuran en el PDF; sin código postal ni localidad aunque estén en la misma línea, y sin rótulos vacíos (`Piso : - Depto:`) (PRD, Esquema de salida) |
+| `localidad_emisor` | `str` | sí | tal como figura en el PDF, con el código postal y la provincia de su misma línea (incluido un código postal que la precede); nunca datos de otra línea (PRD, Esquema de salida) |
 | `condicion_iva_emisor` | `str` | sí | libre |
 | `cuit_receptor` | `str` | sí | igual que `cuit_emisor` |
 | `razon_social_receptor` | `str` | sí | libre |
-| `domicilio_receptor` | `str` | sí | libre |
-| `localidad_receptor` | `str` | sí | libre |
+| `domicilio_receptor` | `str` | sí | solo calle, número, piso y departamento tal como figuran en el PDF; sin código postal ni localidad aunque estén en la misma línea, y sin rótulos vacíos (`Piso : - Depto:`) (PRD, Esquema de salida) |
+| `localidad_receptor` | `str` | sí | tal como figura en el PDF, con el código postal y la provincia de su misma línea (incluido un código postal que la precede); nunca datos de otra línea (PRD, Esquema de salida) |
 | `condicion_iva_receptor` | `str` | sí | libre |
 | `fecha_comprobante` | `str` | sí | `AAAA-MM-DD`, fecha válida |
 | `condicion_venta` | `str` | sí | libre |
@@ -35,7 +35,7 @@ del JSON descargado).
 
 | Campo | Tipo | Nullable | Regla |
 |---|---|---|---|
-| `descripcion_impuesto` | `str` | sí | libre, tal como figura en el PDF |
+| `descripcion_impuesto` | `str` | sí | libre, tal como figura en el PDF, sin la base imponible o el neto gravado si la línea los incluye |
 | `importe` | `Decimal` | sí | cuantizado a 2 decimales |
 
 Igualdad para RNF-03: dos listas de `impuestos` coinciden si tienen los mismos pares sin

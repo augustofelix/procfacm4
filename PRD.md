@@ -56,18 +56,18 @@ Se considera logrado cuando cada factura A se convierte en un JSON validado por 
 | numero_comprobante | entero | sin ceros a la izquierda |
 | cuit_emisor | texto | 11 dígitos, sin guiones |
 | razon_social_emisor | texto | libre, tal como figura en el PDF |
-| domicilio_emisor | texto | libre, tal como figura en el PDF |
-| localidad_emisor | texto | libre, tal como figura en el PDF |
+| domicilio_emisor | texto | libre, tal como figura en el PDF, solo calle, número, piso y departamento: sin código postal ni localidad aunque estén en la misma línea, y sin rótulos vacíos (por ejemplo, "Piso : - Depto:") |
+| localidad_emisor | texto | libre, tal como figura en el PDF, con el código postal y la provincia que figuran junto a ella en la misma línea, incluido un código postal que la precede; sin datos de otras líneas |
 | condicion_iva_emisor | texto | libre, tal como figura en el PDF |
 | cuit_receptor | texto | 11 dígitos, sin guiones |
 | razon_social_receptor | texto | libre, tal como figura en el PDF |
-| domicilio_receptor | texto | libre, tal como figura en el PDF |
-| localidad_receptor | texto | libre, tal como figura en el PDF |
+| domicilio_receptor | texto | libre, tal como figura en el PDF, solo calle, número, piso y departamento: sin código postal ni localidad aunque estén en la misma línea, y sin rótulos vacíos (por ejemplo, "Piso : - Depto:") |
+| localidad_receptor | texto | libre, tal como figura en el PDF, con el código postal y la provincia que figuran junto a ella en la misma línea, incluido un código postal que la precede; sin datos de otras líneas |
 | condicion_iva_receptor | texto | libre, tal como figura en el PDF |
 | fecha_comprobante | texto | `AAAA-MM-DD` (ISO 8601) |
 | condicion_venta | texto | libre, tal como figura en el PDF |
 | subtotal | decimal | redondeado a 2 decimales, punto como separador decimal |
-| impuestos | lista de pares descripcion_impuesto e importe | descripcion_impuesto: texto libre, tal como figura en el PDF; importe: decimal, redondeado a 2 decimales, punto como separador decimal |
+| impuestos | lista de pares descripcion_impuesto e importe | descripcion_impuesto: texto libre, tal como figura en el PDF, sin la base imponible cuando la línea la incluye (por ejemplo, "(Neto gravado $ 1000.00)"); importe: decimal, redondeado a 2 decimales, punto como separador decimal |
 | total | decimal | redondeado a 2 decimales, punto como separador decimal |
 | items | lista de ítems | cada ítem tiene los campos de la tabla "Campos de cada ítem" |
 

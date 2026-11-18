@@ -327,9 +327,11 @@ inválidas.
 - **Resultado de extracción (Esquema de salida)**: campos de encabezado —`punto_venta` y
   `numero_comprobante` (enteros sin ceros a la izquierda), `cuit_emisor` y `cuit_receptor`
   (11 dígitos sin guiones), razón social, domicilio, localidad y condición de IVA de emisor
-  y receptor (texto tal como figura en el PDF), `fecha_comprobante` (`AAAA-MM-DD`),
+  y receptor (texto tal como figura en el PDF; el domicilio sin código postal, localidad ni
+  rótulos vacíos, y la localidad con el código postal y la provincia de su misma línea),
+  `fecha_comprobante` (`AAAA-MM-DD`),
   `condicion_venta`—; totales —`subtotal` y `total` (decimales con 2 decimales y punto)—;
-  `impuestos` (lista de pares `descripcion_impuesto` e `importe`) e `items` (lista de
+  `impuestos` (lista de pares `descripcion_impuesto`, sin la base imponible, e `importe`) e `items` (lista de
   ítems). Todo campo no obtenido vale `null`; `items` e `impuestos` valen `[]` cuando el
   comprobante no tiene ninguno.
 - **Ítem**: `codigo` y `descripcion` (texto tal como figura en el PDF), `cantidad` (decimal
