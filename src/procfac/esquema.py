@@ -26,8 +26,16 @@ def _a_decimal(valor: Any) -> Decimal | None:
         raise ValueError("no es un número") from error
 
 
-def _importe(valor: Any) -> Decimal | None:
+def _no_negativo(valor: Any) -> Decimal | None:
+    """Ningún campo numérico del esquema admite negativos (RF-30, PRD: Esquema de salida)."""
     numero = _a_decimal(valor)
+    if numero is not None and numero < 0:
+        raise ValueError("no admite números negativos")
+    return numero
+
+
+def _importe(valor: Any) -> Decimal | None:
+    numero = _no_negativo(valor)
     return None if numero is None else numero.quantize(_CENTAVOS, rounding=ROUND_HALF_UP)
 
 
@@ -67,7 +75,7 @@ class Item(_Modelo):
     precio_unitario: Numero | None = None
     subtotal_item: Numero | None = None
 
-    _cantidad = field_validator("cantidad", mode="before")(staticmethod(_a_decimal))
+    _cantidad = field_validator("cantidad", mode="before")(staticmethod(_no_negativo))
     _importes = field_validator("precio_unitario", "subtotal_item", mode="before")(
         staticmethod(_importe)
     )

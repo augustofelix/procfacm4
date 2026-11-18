@@ -111,6 +111,14 @@ def _celdas_no_obtenidas(campo: str, no_obtenidos: list[str]) -> list[str]:
     return celdas
 
 
+def configuracion_columnas(columnas: list[str]) -> dict:
+    """Columnas de las tablas editables: las numéricas no admiten negativos (RF-30)."""
+    return {
+        c: st.column_config.NumberColumn(c, min_value=0) if c in NUMERICAS else st.column_config.TextColumn(c)
+        for c in columnas
+    }
+
+
 def mostrar_campos(
     factura: Factura | FacturaEditada, editable: bool, no_obtenidos: list[str], clave: str
 ) -> FacturaEditada:
@@ -127,10 +135,12 @@ def mostrar_campos(
         actual = getattr(factura, campo)
         key = f"{campo}-{clave}"
         if campo in ENTEROS:
-            valores[campo] = st.number_input(etiqueta, value=actual, step=1, key=key, disabled=deshabilitado)
+            valores[campo] = st.number_input(
+                etiqueta, value=actual, min_value=0, step=1, key=key, disabled=deshabilitado
+            )
         elif campo in IMPORTES:
             valores[campo] = st.number_input(
-                etiqueta, value=None if actual is None else float(actual), step=0.01,
+                etiqueta, value=None if actual is None else float(actual), min_value=0.0, step=0.01,
                 key=key, disabled=deshabilitado,
             )
         else:
@@ -142,10 +152,7 @@ def mostrar_campos(
         ("items", COLUMNAS_ITEMS, "Ítems"),
     ):
         st.subheader(titulo + (f" ({NO_OBTENIDO})" if campo in no_obtenidos else ""))
-        configuracion = {
-            c: st.column_config.NumberColumn(c) if c in NUMERICAS else st.column_config.TextColumn(c)
-            for c in columnas
-        }
+        configuracion = configuracion_columnas(columnas)
         tabla = pd.DataFrame(filas(getattr(factura, campo), columnas), columns=columnas)
         for c in columnas:
             tabla[c] = tabla[c].astype("float64" if c in NUMERICAS else "object")

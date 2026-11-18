@@ -63,11 +63,40 @@ def _vacios_a_null(valor: Any) -> Any:
     return valor
 
 
+def _anular(datos: dict, ruta: tuple) -> bool:
+    """Pone en null el campo de `ruta` ("fecha_comprobante", ("items", 0, "cantidad")).
+
+    Devuelve False si la ruta no lleva a un campo simple: ese error es de estructura.
+    """
+    actual: Any = datos
+    for paso in ruta[:-1]:
+        try:
+            actual = actual[paso]
+        except (KeyError, IndexError, TypeError):
+            return False
+    campo = ruta[-1] if ruta else None
+    if not isinstance(actual, dict) or campo not in actual or isinstance(actual[campo], (dict, list)):
+        return False
+    actual[campo] = None
+    return True
+
+
 def a_factura(factura_ia: FacturaIA) -> Factura:
-    """Cualquier campo inválido hace fallar toda la respuesta (CHK023, RF-26)."""
+    """Convierte la respuesta al Esquema de salida.
+
+    Un campo con un valor inválido (fecha inexistente, CUIT sin 11 dígitos, número
+    negativo) queda en null y se informa como no obtenido (RF-35); solo un error de
+    estructura hace fallar toda la respuesta (RF-26).
+    """
     from procfac.ia import FallaExtraccionIA
 
+    datos = _vacios_a_null(factura_ia.model_dump())
     try:
-        return Factura.model_validate(_vacios_a_null(factura_ia.model_dump()))
+        return Factura.model_validate(datos)
+    except ValidationError as error:
+        if not all(_anular(datos, tuple(e["loc"])) for e in error.errors()):
+            raise FallaExtraccionIA() from error
+    try:
+        return Factura.model_validate(datos)
     except ValidationError as error:
         raise FallaExtraccionIA() from error
