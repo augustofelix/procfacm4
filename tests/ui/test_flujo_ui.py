@@ -97,6 +97,19 @@ def test_subir_otro_pdf_desde_la_descarga(api):
 SUBTOTALES = "no coincide con el subtotal"
 
 
+def test_campos_numericos_no_admiten_negativos(api):
+    """RF-30, AC-37: ningún campo numérico de la validación admite negativos."""
+    from procfac.ui.validacion import configuracion_columnas
+
+    at = hasta_validacion(api)
+    assert all(w.min == 0 for w in at.number_input)
+    for columnas in (["descripcion_impuesto", "importe"],
+                     ["codigo", "descripcion", "cantidad", "precio_unitario", "subtotal_item"]):
+        for columna, config in configuracion_columnas(columnas).items():
+            if config["type_config"]["type"] == "number":
+                assert config["type_config"]["min_value"] == 0, columna
+
+
 def test_advertencia_de_subtotales_se_actualiza_al_corregir(api):
     """AC-41: se advierte con los valores extraídos y desaparece al corregirlos."""
     api.resultado = resultado(factura_de_ejemplo(subtotal="900"))

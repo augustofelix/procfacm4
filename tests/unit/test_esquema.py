@@ -66,6 +66,18 @@ def test_enteros_no_negativos(campo):
         Factura(**{campo: -1})
 
 
+@pytest.mark.parametrize(
+    "modelo, campo",
+    [(Factura, "subtotal"), (Factura, "total"), (Impuesto, "importe"), (Item, "cantidad"),
+     (Item, "precio_unitario"), (Item, "subtotal_item")],
+)
+def test_numeros_negativos_fallan(modelo, campo):
+    """RF-30 y esquema del PRD: ningún campo numérico admite negativos."""
+    assert getattr(modelo(**{campo: 0}), campo) == 0
+    with pytest.raises(ValidationError):
+        modelo(**{campo: -1})
+
+
 def test_listas_distinguen_null_de_vacia():
     assert Factura(items=None, impuestos=None).items is None
     factura = Factura(items=[], impuestos=[])

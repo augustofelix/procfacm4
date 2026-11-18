@@ -119,17 +119,53 @@ async def test_errores_del_sdk_son_falla_sin_reintento(error):
         _respuesta(factura_ia(), stop_reason="refusal"),
         _respuesta(factura_ia(), stop_reason="max_tokens"),
         _respuesta(None),
-        _respuesta(factura_ia(cuit_emisor="123456789")),
-        _respuesta(factura_ia(fecha_comprobante="2026-02-30")),
-        _respuesta(factura_ia(fecha_comprobante="15/03/2026")),
     ],
-    ids=["refusal", "max_tokens", "sin_salida", "cuit_9_digitos", "fecha_inexistente", "fecha_invalida"],
+    ids=["refusal", "max_tokens", "sin_salida"],
 )
 async def test_respuestas_invalidas_son_falla_sin_reintento(respuesta):
     extractor, mensajes = _extractor(respuesta)
     with pytest.raises(FallaExtraccionIA):
         await extractor("texto")
     assert len(mensajes.llamadas) == 1
+
+
+@pytest.mark.parametrize(
+    "cambios, campo",
+    [
+        ({"fecha_comprobante": "2026-02-31"}, "fecha_comprobante"),  # corrección del profesor
+        ({"fecha_comprobante": "2026-02-30"}, "fecha_comprobante"),
+        ({"fecha_comprobante": "15/03/2026"}, "fecha_comprobante"),
+        ({"cuit_emisor": "123456789"}, "cuit_emisor"),
+        ({"subtotal": -1000}, "subtotal"),
+        ({"total": -1210}, "total"),
+        ({"punto_venta": -1}, "punto_venta"),
+    ],
+    ids=["31_de_febrero", "30_de_febrero", "otro_formato", "cuit_9_digitos", "subtotal_negativo",
+         "total_negativo", "punto_venta_negativo"],
+)
+async def test_campo_invalido_queda_en_null_sin_falla(cambios, campo):
+    """RF-35, AC-43, AC-44: un campo inválido no cancela la extracción."""
+    extractor, mensajes = _extractor(_respuesta(factura_ia(**cambios)))
+    factura = await extractor("texto")
+    assert getattr(factura, campo) is None
+    assert factura.numero_comprobante == 123 and factura.cuit_receptor is None
+    assert factura.items[0].descripcion == "Tornillo"  # el resto se conserva
+    assert len(mensajes.llamadas) == 1
+
+
+async def test_negativos_en_impuestos_e_items_quedan_en_null():
+    respuesta = _respuesta(factura_ia(
+        impuestos=[ImpuestoIA(descripcion_impuesto="IVA 21%", importe=-210)],
+        items=[ItemIA(codigo="P1", descripcion="Tornillo", cantidad=-2, precio_unitario=-10,
+                      subtotal_item=-20)],
+    ))
+    extractor, _ = _extractor(respuesta)
+    factura = await extractor("texto")
+    assert factura.impuestos[0].importe is None
+    assert factura.impuestos[0].descripcion_impuesto == "IVA 21%"
+    item = factura.items[0]
+    assert (item.cantidad, item.precio_unitario, item.subtotal_item) == (None, None, None)
+    assert item.descripcion == "Tornillo"
 
 
 async def test_salida_que_no_parsea_es_falla():
