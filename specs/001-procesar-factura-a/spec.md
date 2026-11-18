@@ -258,9 +258,13 @@ inválidas.
 - **FR-014**: El sistema DEBE devolver los campos extraídos en la respuesta de la misma
   petición que siguió a la aceptación del consentimiento (RNF-06, AC-17).
 - **FR-015**: El sistema DEBE considerar falla del servicio de IA cuando devuelve un error,
-  no responde dentro de 60 segundos o su respuesta no se puede leer o no cumple el Esquema
-  de salida; ante una falla DEBE mostrar un mensaje de que no se pudo completar la
-  extracción y cancelar el proceso, sin reintentar (RF-26, RF-27, AC-32).
+  no responde dentro de 60 segundos o su respuesta no se puede leer o no cumple la estructura
+  (campos y tipos) del Esquema de salida; ante una falla DEBE mostrar un mensaje de que no se
+  pudo completar la extracción y cancelar el proceso, sin reintentar (RF-26, RF-27, AC-32).
+- **FR-015a**: Un campo extraído con un valor que no cumple el formato del Esquema de salida
+  (fecha inexistente o con otro formato, CUIT sin 11 dígitos, número negativo) NO es una
+  falla: el sistema DEBE dejarlo en `null` e indicarlo como no obtenido, y mostrar el resto
+  de los campos para validar (RF-35, AC-43, AC-44).
 
 **Validación y descarga**
 
@@ -282,7 +286,7 @@ inválidas.
 - **FR-019a**: En los campos numéricos del Esquema de salida la pantalla de validación DEBE
   admitir solo números: enteros en `punto_venta` y `numero_comprobante`, y decimales con
   punto como separador en `subtotal`, `total`, `importe`, `cantidad`, `precio_unitario` y
-  `subtotal_item`; un campo numérico vacío se descarga como `null`. Fuera de esta
+  `subtotal_item`, sin números negativos en ninguno; un campo numérico vacío se descarga como `null`. Fuera de esta
   restricción de tipo no se valida el contenido (formato del CUIT, de la fecha, cantidad de
   decimales), salvo la advertencia de FR-019b (RF-30, AC-37).
 - **FR-019b**: La pantalla de validación DEBE mostrar una advertencia cuando la suma de

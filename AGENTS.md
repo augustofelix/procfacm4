@@ -48,8 +48,10 @@ Los IDs de requerimientos y criterios (RF, RNF, AC) se refieren a `PRD.md`.
   del proceso: todo se procesa en memoria (RNF-07, AC-22). Ojo: FastAPI guarda en un
   archivo temporal en disco los archivos subidos de más de 1 MB.
 - No reintentar la llamada a la API de Claude: si devuelve un error, no responde en
-  60 segundos o su respuesta no se puede leer o no cumple el Esquema de salida, mostrar
-  un mensaje y cancelar el proceso (RF-26, RF-27, AC-32).
+  60 segundos o su respuesta no se puede leer o no cumple la estructura del Esquema de
+  salida, mostrar un mensaje y cancelar el proceso (RF-26, RF-27, AC-32). Un campo con un
+  valor inválido (fecha inexistente, CUIT sin 11 dígitos, número negativo) no es falla:
+  queda en `null` como no obtenido (RF-35, AC-43, AC-44).
 - No hardcodear la API key de Claude ni las credenciales de los usuarios en el código
   fuente: se cargan desde el archivo `.env`.
 - No commitear el archivo `.env`: las contraseñas de los usuarios y la API key de Claude
