@@ -11,7 +11,7 @@ import streamlit as st
 from procfac.config import url_api
 from procfac.esquema import FacturaEditada, nombre_archivo, serializar_json
 from procfac.logs import configurar_logs, registrar_proceso
-from procfac.ui import cliente_api
+from procfac.ui import cliente_api, estilo
 from procfac.ui.cliente_api import ErrorAPI
 from procfac.ui.validacion import mostrar_campos, registrar_descarga
 
@@ -79,10 +79,18 @@ def _selector_de_archivos(etiqueta: str) -> None:
 
 
 def pantalla_login() -> None:
+    panel, formulario = st.columns([46, 54], gap=None)
+    with panel:
+        estilo.panel_login()
+    with formulario, st.container(key="formulario-login"):
+        _formulario_login()
+
+
+def _formulario_login() -> None:
     st.title("ProcFac")
     usuario = st.text_input("Usuario", key="usuario")
     clave = st.text_input("Contraseña", type="password", key="clave")
-    if st.button("Ingresar", key="ingresar"):
+    if st.button("Ingresar", key="ingresar", type="primary"):
         try:
             ss.token = _cliente().login(usuario, clave)
         except ErrorAPI as error:
@@ -104,7 +112,7 @@ def pantalla_consentimiento() -> None:
     st.title("Consentimiento")
     st.warning(ADVERTENCIA)
     aceptar, rechazar = st.columns(2)
-    if aceptar.button("Aceptar y procesar", key="aceptar"):
+    if aceptar.button("Aceptar y procesar", key="aceptar", type="primary"):
         _registrar("consentimiento", "aceptado")
         ss.estado = "extrayendo"
         st.rerun()
@@ -138,7 +146,7 @@ def pantalla_validacion() -> None:
         st.warning(MENSAJE_ILEGIBLE)
     factura = mostrar_campos(ss.factura, True, ss.resultado.campos_no_obtenidos, str(ss.proceso))
     confirmar, cancelar = st.columns(2)
-    if confirmar.button("Confirmar", key="confirmar"):
+    if confirmar.button("Confirmar", key="confirmar", type="primary"):
         ss.factura = factura
         ss.estado = "descargable"
         st.rerun()
@@ -156,6 +164,7 @@ def pantalla_descargable() -> None:
         data=serializar_json(ss.factura),
         file_name=nombre_archivo(ss.factura),
         mime="application/json",
+        type="primary",
         on_click=registrar_descarga,
         args=(ss.usuario_activo, ss.inicio_proceso),
     )
@@ -174,9 +183,13 @@ PANTALLAS = {
     "descargable": pantalla_descargable,
 }
 
-st.set_page_config(page_title="ProcFac")
+st.set_page_config(page_title="ProcFac", layout="wide")
 configurar_logs()
 if not ss.get("token"):
     ss.estado = "login"
 ss.setdefault("estado", "login")
+if ss.estado == "login":
+    estilo.aplicar_login()
+else:
+    estilo.aplicar_trabajo(ss.estado, ss.usuario_activo)
 PANTALLAS[ss.estado]()

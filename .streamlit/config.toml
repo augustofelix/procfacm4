@@ -1,0 +1,19 @@
+# Tema de la UI: colores, radios y tipografía del template (tokens.css).
+[theme]
+base = "light"
+primaryColor = "#1769aa"
+backgroundColor = "#f4f7f9"
+secondaryBackgroundColor = "#f0f4f7"
+textColor = "#172433"
+linkColor = "#1769aa"
+borderColor = "#d9e1e8"
+showWidgetBorder = true
+baseRadius = "8px"
+baseFontSize = 14
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+
+[theme.sidebar]
+backgroundColor = "#dbe5ee"
+secondaryBackgroundColor = "#f7fafc"
+textColor = "#203f59"
+borderColor = "#bccbd8"
