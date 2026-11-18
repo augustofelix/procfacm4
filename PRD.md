@@ -43,10 +43,11 @@ Se considera logrado cuando cada factura A se convierte en un JSON validado por 
 - RF-27: El sistema debe cancelar el proceso cuando la API de Claude falla según RF-26.
 - RF-28: El sistema debe rechazar, antes de enviarlo a la API de Claude, todo PDF de más de 3 páginas.
 - RF-29: El sistema debe rechazar todo archivo que no sea un PDF.
-- RF-30: El sistema debe admitir solo números en los campos numéricos del Esquema de salida durante la validación: enteros en punto_venta y numero_comprobante, y decimales con punto como separador decimal en subtotal, total, importe, cantidad, precio_unitario y subtotal_item; un campo numérico vacío se representa con `null`. Fuera de esta restricción de tipo no se valida el contenido corregido o completado por el usuario.
+- RF-30: El sistema debe admitir solo números en los campos numéricos del Esquema de salida durante la validación: enteros en punto_venta y numero_comprobante, y decimales con punto como separador decimal en subtotal, total, importe, cantidad, precio_unitario y subtotal_item; un campo numérico vacío se representa con `null`. Fuera de esta restricción de tipo y de la advertencia de RF-34 no se valida el contenido corregido o completado por el usuario.
 - RF-31: El sistema debe permitir que un mismo usuario tenga varias sesiones activas a la vez; un nuevo inicio de sesión no invalida las anteriores, cada sesión mantiene su propio proceso y ningún dato del proceso de una sesión se muestra, devuelve ni descarga en otra sesión, aunque sea del mismo usuario.
 - RF-32: El sistema debe mantener disponible la descarga del JSON después de descargarlo, entregando el mismo JSON validado en cada descarga, y ofrecer la opción "Procesar otra factura"; al elegirla, o al subir un PDF nuevo, debe descartar de memoria los datos del proceso anterior y volver a la pantalla de carga.
 - RF-33: El sistema debe registrar en los logs solo metadatos de cada proceso: usuario, fecha y hora, resultado (consentimiento aceptado o rechazado, rechazo y su motivo, falla de la API de Claude, validación cancelada, descarga) y duración; los logs no deben contener el contenido del PDF, el texto extraído, valores de campos, el JSON, contraseñas ni la API key de Claude.
+- RF-34: El sistema debe mostrar una advertencia en la pantalla de validación cuando la suma de subtotal_item de todos los ítems no es exactamente igual a subtotal, comparando con 2 decimales; para la comparación, un subtotal_item o un subtotal en `null` vale 0, y un campo items en `null` o vacío suma 0. La advertencia se evalúa sobre los valores extraídos al mostrarlos y sobre los valores que el usuario corrige o completa, y también se muestra con los valores confirmados en la pantalla de descarga. La advertencia no impide confirmar ni descargar el JSON.
 
 ### Esquema de salida
 | Campo | Tipo | Formato |
@@ -139,6 +140,8 @@ El PDF de AC-36 es una factura A real descargada con sus copias ORIGINAL, DUPLIC
 - AC-38 (RF-31): Dado un usuario con sesión activa en dos navegadores, Cuando inicia sesión en el segundo y procesa un PDF distinto en cada sesión, Entonces ambas sesiones siguen activas y cada una muestra y permite descargar solo el JSON de su propio PDF.
 - AC-39 (RF-32): Dado un usuario que descargó el JSON validado, Cuando lo vuelve a descargar y luego elige "Procesar otra factura", Entonces la segunda descarga contiene los mismos valores validados y después el sistema vuelve a la pantalla de carga sin mostrar datos del proceso anterior.
 - AC-40 (RF-33): Dado el Conjunto de referencia procesado completo, incluidos un rechazo, una cancelación y una descarga, Cuando se buscan en los logs los valores de los JSON esperados, las contraseñas del archivo .env y la API key de Claude, Entonces no hay ninguna coincidencia, y cada proceso tiene registrados su usuario, fecha y hora, resultado y duración.
+- AC-41 (RF-34): Dado un usuario al que se le muestran los campos extraídos, Cuando la suma de subtotal_item de los ítems no es exactamente igual a subtotal, considerando `null` como 0, Entonces el sistema muestra una advertencia con ambos valores; y Cuando el usuario corrige los valores hasta que coinciden, Entonces la advertencia deja de mostrarse.
+- AC-42 (RF-34): Dado un usuario al que se le muestra la advertencia de RF-34, Cuando confirma los campos sin corregirlos, Entonces el sistema le permite confirmar, le muestra la advertencia en la pantalla de descarga y le permite descargar el JSON con los valores confirmados.
 
 ## Fuera de Alcance
 - No se procesan PDF escaneados (no nativos). No se escanean comprobantes desde la aplicación.
@@ -149,7 +152,7 @@ El PDF de AC-36 es una factura A real descargada con sus copias ORIGINAL, DUPLIC
 - No se cargan comprobantes por lotes.
 - No se procesan PDF que contengan más de una factura.
 - No se integra con sistema contable.
-- No se validan los datos corregidos o completados manualmente por el usuario, salvo la restricción de tipo de los campos numéricos (RF-30).
+- No se validan los datos corregidos o completados manualmente por el usuario, salvo la restricción de tipo de los campos numéricos (RF-30) y la advertencia de subtotales (RF-34), que no impide descargar.
 - No se gestionan usuarios desde la aplicación (alta, baja, cambio o recuperación de contraseña); se definen solo en el archivo .env.
 - No se extraen de cada ítem la unidad de medida, el porcentaje de bonificación, el importe de bonificación, la alícuota de IVA ni el subtotal con IVA; se reservan para la versión 2.
 - No se reintenta automáticamente la llamada a la API de Claude.
@@ -161,7 +164,7 @@ El PDF de AC-36 es una factura A real descargada con sus copias ORIGINAL, DUPLIC
 - Riesgo: Hay diferentes formatos de comprobantes, mitigación informar cuando no se pueden obtener los datos.
 - Riesgo: Compartir información sensible con los modelos de IA, mitigación advertir al usuario esta situación y en caso de no aceptar cancelar el proceso.
 - Riesgo: Las contraseñas de los usuarios y la API key de Claude se guardan en texto plano en un archivo .env, mitigación el archivo queda fuera del repositorio.
-- Riesgo: Los datos corregidos o completados manualmente por el usuario no se validan, salvo la restricción de tipo de los campos numéricos (RF-30), por lo que el JSON descargado puede no cumplir el Esquema de salida, mitigación se acepta el riesgo en el MVP.
+- Riesgo: Los datos corregidos o completados manualmente por el usuario no se validan, salvo la restricción de tipo de los campos numéricos (RF-30) y la advertencia de subtotales (RF-34), que no impide descargar, por lo que el JSON descargado puede no cumplir el Esquema de salida, mitigación se acepta el riesgo en el MVP.
 - Riesgo: La detección del tipo de comprobante y de la cantidad de facturas se hace sin la API de Claude y puede fallar, rechazando facturas A válidas o enviando a la API un PDF que debía rechazarse, mitigación AC-14, AC-18 y los AC del Conjunto de referencia verifican ambos casos; se acepta el riesgo residual en el MVP.
 - Riesgo: La API de Claude puede no responder o demorarse e impedir cumplir RNF-02 y RNF-04, mitigación se acepta el riesgo en el MVP.
 - Riesgo: El campo impuestos se compara por coincidencia exacta de cada par descripcion_impuesto e importe, y descripcion_impuesto debe coincidir con el texto tal como figura en el PDF, por lo que si la extracción no copia ese texto exacto (por ejemplo, "IVA 21 %" en lugar de "IVA 21%") cuenta como error en RNF-03 y AC-21, mitigación se acepta el riesgo en el MVP y se resuelve en la versión 2.

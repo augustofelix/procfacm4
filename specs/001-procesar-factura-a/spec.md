@@ -284,7 +284,12 @@ inválidas.
   punto como separador en `subtotal`, `total`, `importe`, `cantidad`, `precio_unitario` y
   `subtotal_item`; un campo numérico vacío se descarga como `null`. Fuera de esta
   restricción de tipo no se valida el contenido (formato del CUIT, de la fecha, cantidad de
-  decimales, coherencia de totales) (RF-30, AC-37).
+  decimales), salvo la advertencia de FR-019b (RF-30, AC-37).
+- **FR-019b**: La pantalla de validación DEBE mostrar una advertencia cuando la suma de
+  `subtotal_item` de los ítems no es exactamente igual a `subtotal` (2 decimales; `null`
+  vale 0 y `items` en `null` o vacío suma 0), tanto con los valores extraídos como con los
+  que corrige el usuario, y repetirla con los valores confirmados en la pantalla de
+  descarga; la advertencia no impide confirmar ni descargar (RF-34, AC-41, AC-42).
 - **FR-020**: El sistema DEBE habilitar la descarga solo después de que el usuario confirma
   explícitamente los campos (RF-21, AC-26).
 - **FR-021**: El sistema DEBE entregar como archivo descargable con extensión `.json` los
@@ -390,7 +395,7 @@ inválidas.
   moneda ni convertirlos; el Esquema de salida no tiene campo de moneda y agregarlo
   requiere modificar el PRD.
 - Fuera de alcance (PRD): PDF escaneados y OCR, email, otros comprobantes que no sean
-  factura A, lotes, integración con sistemas contables, validación de datos corregidos (salvo la restricción de tipo de FR-019a),
+  factura A, lotes, integración con sistemas contables, validación de datos corregidos (salvo la restricción de tipo de FR-019a y la advertencia de FR-019b),
   gestión de usuarios, reintentos automáticos al servicio de IA y los campos de ítem de la
   versión 2.
 - El Conjunto de referencia, el PDF de AC-36 y los PDF armados para las pruebas (AC-11,

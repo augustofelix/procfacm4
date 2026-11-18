@@ -61,7 +61,8 @@ Los IDs de requerimientos y criterios (RF, RNF, AC) se refieren a `PRD.md`.
   el JSON esperado de AC-11: también van en `tests/data/`.
 - No agregar funcionalidades fuera del alcance del MVP: validación de los datos
   corregidos o completados por el usuario (salvo la restricción de tipo de los campos
-  numéricos de RF-30, AC-37), recepción o envío por email, integración
+  numéricos de RF-30, AC-37, y la advertencia de subtotales de RF-34, AC-41, AC-42,
+  que no bloquea la descarga), recepción o envío por email, integración
   con sistemas contables, gestión de usuarios desde la aplicación (alta, baja, cambio o
   recuperación de contraseña), cierre o vencimiento de sesión, reintentos automáticos de
   la API de Claude, límite de tamaño en bytes del PDF, y los campos de ítem reservados
